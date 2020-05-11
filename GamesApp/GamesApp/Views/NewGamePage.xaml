@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="GamesApp.Views.NewGamePage"
+             Title="NEW">
+
+    <StackLayout>
+        <StackLayout.Padding>
+            <OnPlatform x:TypeArguments="Thickness">
+                <OnPlatform.Platforms>
+                    <On Platform="iOS" Value="0,20,0,0"/>
+                    <On Platform="Android" Value="0,0,0,0"/>
+                </OnPlatform.Platforms>
+            </OnPlatform>
+        </StackLayout.Padding>
+
+        <SearchBar />
+
+        <Grid Padding="10" HeightRequest="60">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Picker />
+            <Button Grid.Column="1"  Text="Filter"/>
+        </Grid>
+
+        <Label Text="New Releases" FontAttributes="Bold" FontSize="30" HorizontalTextAlignment="Center" />
+        <Label Text="Last 30 days" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" Margin="0,0,0,10"/>
+
+        <CollectionView 
+            x:Name="CollectionView" 
+            VerticalOptions="FillAndExpand" 
+            SelectionMode="Single" 
+            ItemsSource="{Binding NewReleasedGames}" 
+            RemainingItemsThreshold="0" 
+            RemainingItemsThresholdReached="OnRemainingItemsThresholdReached">
+            <!--<CollectionView.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Baboon</x:String>
+                    <x:String>Baboon</x:String>
+                </x:Array>
+            </CollectionView.ItemsSource>-->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout BackgroundColor="LightGray">
+                       <Frame Padding="0" Margin="0">
+                            <Image Aspect="AspectFill" Source="https://imgix.bustle.com/uploads/image/2020/3/27/15851b37-768a-4dad-b03a-12f939965698-bloodborne.jpg" HeightRequest="250" />
+                       </Frame>
+                        <Label Text="{Binding name}" FontSize="20" FontAttributes="Bold" Margin="10,0,0,0"/>
+                        <Label Text="Action, Rpg" Margin="10,0,0,0"/>
+                        <StackLayout Orientation="Horizontal" Padding="10">
+                            <Button Text="DETAILS"/>
+                            <Button Text="LIKE"/> 
+                        </StackLayout>
+                    </StackLayout>
+                </DataTemplate>
+                </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentPage>
