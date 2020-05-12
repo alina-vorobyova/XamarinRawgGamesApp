@@ -29,9 +29,8 @@
             <Button Grid.Column="1"  Text="Filter"/>
         </Grid>
 
-        <Label Text="New Releases" FontAttributes="Bold" FontSize="30" HorizontalTextAlignment="Center" />
-        <Label Text="Last 30 days" FontAttributes="Bold" FontSize="20" HorizontalTextAlignment="Center" Margin="0,0,0,10"/>
-
+        <Label  Text="{Binding CheckConnection}"  IsVisible="{Binding IsConnected}" HorizontalOptions="CenterAndExpand" FontSize="20" FontAttributes="Bold" />
+        <Image Source="gaming.jpg" HeightRequest="100" HorizontalOptions="Center"  IsVisible="{Binding IsConnected}" />
         <CollectionView 
             x:Name="CollectionView" 
             VerticalOptions="FillAndExpand" 

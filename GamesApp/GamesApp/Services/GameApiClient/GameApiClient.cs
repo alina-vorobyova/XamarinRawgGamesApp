@@ -21,11 +21,13 @@ namespace GamesApp.Services.GameApiClient
 
         public async Task<GameApiResponse> GetAllNewReleasedGamesForLast30Days(int page)
         {
+            GameApiResponse games = null;
             var currentDate = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-{DateTime.Now.Day:D2}";
             var firstDayCurMonth = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-01";
             var requestUri = $"{url}/games?dates={firstDayCurMonth},{currentDate}&ordering=released&page_size=10&page={page}";
             var json =  await _httpClient.GetStringAsync(requestUri);
-            var games = JsonConvert.DeserializeObject<GameApiResponse>(json);
+            if(json != null)
+                 games = JsonConvert.DeserializeObject<GameApiResponse>(json);
             return games;
         }
 

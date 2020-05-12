@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Acr.UserDialogs;
+using Xamarin.Essentials;
+using Xamarin.Forms;
 
 namespace GamesApp.ViewModels
 {
@@ -15,6 +18,7 @@ namespace GamesApp.ViewModels
             set => Set(ref _title, value);
         }
 
+      
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void Set<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
@@ -22,5 +26,7 @@ namespace GamesApp.ViewModels
             field = value;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+      
     }
 }

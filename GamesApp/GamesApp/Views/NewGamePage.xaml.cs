@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,6 @@ namespace GamesApp.Views
 
         private void OnRemainingItemsThresholdReached(object sender, EventArgs e)
         {
-            //DisplayAlert("1", "2", "3");
             if (BindingContext is NewGamesViewModel newGamesViewModel)
             {
                 newGamesViewModel.LoadMoreGames.Execute(null);

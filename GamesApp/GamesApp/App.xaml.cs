@@ -5,6 +5,7 @@ using GamesApp.Services;
 using GamesApp.Services.GameApiClient;
 using GamesApp.ViewModels;
 using GamesApp.Views;
+using Xamarin.Essentials;
 
 namespace GamesApp
 {
@@ -22,6 +23,7 @@ namespace GamesApp
 
         protected override void OnStart()
         {
+            
         }
 
         protected override void OnSleep()
