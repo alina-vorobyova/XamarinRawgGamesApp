@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="GamesApp.Views.GameDetailPage"
+             Title="{Binding Title}">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout.Padding>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <OnPlatform.Platforms>
+                        <On Platform="iOS" Value="0,20,0,0"/>
+                        <On Platform="Android" Value="0,0,0,0"/>
+                    </OnPlatform.Platforms>
+                </OnPlatform>
+            </StackLayout.Padding>
+            <StackLayout BackgroundColor="LightGray" HeightRequest="350">
+                <Frame Padding="0" Margin="0">
+                    <Image Aspect="AspectFill" Source="{Binding Game.background_image}" HeightRequest="200"/>
+                </Frame>
+                <Label Text="{Binding Game.name}" FontSize="20" FontAttributes="Bold" Margin="10,0,0,0"/>
+                <StackLayout Padding="5,0,0,0" HeightRequest="10">
+                    <CollectionView ItemsSource="{Binding Game.genres}" ItemsLayout="HorizontalList">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Label Text="{Binding name, StringFormat=' {0}'}" />
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Padding="5,0,0,0">
+                    <Button Text="LIKE"/>
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

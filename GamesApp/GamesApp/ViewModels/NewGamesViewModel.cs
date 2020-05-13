@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Acr.UserDialogs;
 using GamesApp.Models;
 using GamesApp.Services.GameApiClient;
+using GamesApp.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -19,7 +20,7 @@ namespace GamesApp.ViewModels
 
         private ObservableCollection<Game> _newReleasedGames = new ObservableCollection<Game>();
 
-       private bool _loading = false;
+        private bool _loading = false;
 
         private int _page;
 
@@ -45,6 +46,7 @@ namespace GamesApp.ViewModels
 
 
         public Command LoadMoreGames { get; set; }
+        public  Command GameDetailCommand { get; set; }
 
         public NewGamesViewModel()
         {
@@ -52,7 +54,16 @@ namespace GamesApp.ViewModels
             _gameApiClient = DependencyService.Get<IGameApiClient>();
             LoadGamesFromApi();
             LoadMoreGames = new Command(LoadMoreGamesFromApi);
+            GameDetailCommand = new Command<Game>(GameDetails);
         }
+
+        private async void GameDetails(Game game)
+        {
+            var detailPage = (Application.Current.MainPage as MasterDetailPage).Detail;
+            await detailPage.Navigation.PushAsync(new GameDetailPage());
+            MessagingCenter.Send(this, "game_details", game);
+        }
+
 
         private async void LoadGamesFromApi()
         {

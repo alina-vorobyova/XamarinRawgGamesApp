@@ -5,7 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="GamesApp.Views.NewGamePage"
-             Title="NEW">
+             Title="NEW"
+             x:Name="Page">
 
     <StackLayout>
         <StackLayout.Padding>
@@ -46,14 +47,25 @@
             </CollectionView.ItemsSource>-->
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout BackgroundColor="LightGray">
+                    <StackLayout BackgroundColor="LightGray" HeightRequest="350">
                        <Frame Padding="0" Margin="0">
-                            <Image Aspect="AspectFill" Source="https://imgix.bustle.com/uploads/image/2020/3/27/15851b37-768a-4dad-b03a-12f939965698-bloodborne.jpg" HeightRequest="250" />
+                            <Image Aspect="AspectFill" Source="{Binding background_image}" HeightRequest="200"/>
                        </Frame>
                         <Label Text="{Binding name}" FontSize="20" FontAttributes="Bold" Margin="10,0,0,0"/>
-                        <Label Text="Action, Rpg" Margin="10,0,0,0"/>
-                        <StackLayout Orientation="Horizontal" Padding="10">
-                            <Button Text="DETAILS"/>
+                        <StackLayout Padding="5,0,0,0" HeightRequest="10">
+                            <CollectionView ItemsSource="{Binding genres}" ItemsLayout="HorizontalList">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Text="{Binding name, StringFormat=' {0}'}" />
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </StackLayout>
+                      
+                
+                        <Label Text="{Binding genres.name}" Margin="10,0,0,0"/>
+                        <StackLayout Orientation="Horizontal" Padding="5,0,0,0">
+                            <Button Text="DETAILS" Command="{Binding Source={x:Reference Page}, Path=BindingContext.GameDetailCommand}" CommandParameter="{Binding .}"/>
                             <Button Text="LIKE"/> 
                         </StackLayout>
                     </StackLayout>
