@@ -3,25 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:forms="clr-namespace:MediaManager.Forms;assembly=MediaManager.Forms"
+             xmlns:videoPlayer="clr-namespace:Octane.Xamarin.Forms.VideoPlayer;assembly=Octane.Xamarin.Forms.VideoPlayer"
              mc:Ignorable="d"
              x:Class="GamesApp.Views.GameDetailPage"
              Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout>
-            <StackLayout.Padding>
+        <ScrollView>
+            <ScrollView.Padding>
                 <OnPlatform x:TypeArguments="Thickness">
                     <OnPlatform.Platforms>
                         <On Platform="iOS" Value="0,20,0,0"/>
                         <On Platform="Android" Value="0,0,0,0"/>
                     </OnPlatform.Platforms>
                 </OnPlatform>
-            </StackLayout.Padding>
-            <StackLayout BackgroundColor="LightGray" HeightRequest="350">
+            </ScrollView.Padding>
+            <StackLayout BackgroundColor="LightGray">
                 <Frame Padding="0" Margin="0">
                     <Image Aspect="AspectFill" Source="{Binding Game.background_image}" HeightRequest="200"/>
                 </Frame>
-                <Label Text="{Binding Game.name}" FontSize="20" FontAttributes="Bold" Margin="10,0,0,0"/>
-                <StackLayout Padding="5,0,0,0" HeightRequest="10">
+                <Label Text="{Binding Game.name}" FontSize="20" FontAttributes="Bold" Margin="20,0,0,0"/>
+                <StackLayout Padding="5,0,0,0" HeightRequest="10" Margin="10,0,0,10">
                     <CollectionView ItemsSource="{Binding Game.genres}" ItemsLayout="HorizontalList">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
@@ -30,10 +32,20 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
                 </StackLayout>
-                <StackLayout Orientation="Horizontal" Padding="5,0,0,0">
-                    <Button Text="LIKE"/>
+           
+                <videoPlayer:VideoPlayer
+                    AutoPlay="True"
+                    DisplayControls="True"
+                    Source="{Binding Game.clip.clip}"
+                    HeightRequest="200"
+                    IsVisible="{Binding IsVideoExists}"
+                />
+                <Label Text="{Binding Game.description}" Margin="20,0,20,0" FontSize="16"/>
+                <StackLayout Orientation="Horizontal" Padding="20,0,0,20">
+                    <ImageButton Source="dislike" HeightRequest="40" WidthRequest="40" /> 
+                    <ImageButton Source="share" HeightRequest="45" WidthRequest="45" Command="{Binding ShareGameCommand}"/>
                 </StackLayout>
             </StackLayout>
-        </StackLayout>
+         </ScrollView>
     </ContentPage.Content>
 </ContentPage>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GamesApp.Models;
 using Newtonsoft.Json;
@@ -24,7 +25,7 @@ namespace GamesApp.Services.GameApiClient
             GameApiResponse games = null;
             var currentDate = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-{DateTime.Now.Day:D2}";
             var firstDayCurMonth = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-01";
-            var requestUri = $"{url}/games?dates={firstDayCurMonth},{currentDate}&ordering=released&page_size=10&page={page}";
+            var requestUri = $"{url}/games?dates={firstDayCurMonth},{currentDate}&ordering=released&page_size=10&page={page}&ordering=rating";
             var json =  await _httpClient.GetStringAsync(requestUri);
             if(json != null)
                  games = JsonConvert.DeserializeObject<GameApiResponse>(json);
@@ -34,6 +35,26 @@ namespace GamesApp.Services.GameApiClient
         public Task<GameApiResponse> GetGamesByFilter(string year, string platform, string genre)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<GameDetailedResponse> GetGameById(int id)
+        {
+            GameDetailedResponse game = null;
+            var requestUri = $"{url}/games/{id}";
+            var json = await _httpClient.GetStringAsync(requestUri);
+            if (json != null)
+                try
+                {
+                    game = JsonConvert.DeserializeObject<GameDetailedResponse>(json);
+                    string pattern = @"<(.|\n)*?/>";
+                    game.description = Regex.Replace(game.description, pattern, string.Empty);
+                    game.description = Regex.Replace(game.description, "<br/>", string.Empty);
+                }
+                catch (Exception e)
+                {
+                  
+                }
+            return game;
         }
     }
 }

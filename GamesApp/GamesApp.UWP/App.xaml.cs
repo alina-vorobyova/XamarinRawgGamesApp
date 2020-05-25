@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Octane.Xamarin.Forms.VideoPlayer.UWP;
 
 namespace GamesApp.UWP
 {
@@ -72,6 +73,7 @@ namespace GamesApp.UWP
             }
             // Ensure the current window is active
             Window.Current.Activate();
+            FormsVideoPlayer.Init();
         }
 
         /// <summary>

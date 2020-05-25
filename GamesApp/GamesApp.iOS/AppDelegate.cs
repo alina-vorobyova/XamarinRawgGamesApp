@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
+using MediaManager;
+using Octane.Xamarin.Forms.VideoPlayer.iOS;
 using UIKit;
 
 namespace GamesApp.iOS
@@ -24,7 +26,7 @@ namespace GamesApp.iOS
         {
             global::Xamarin.Forms.Forms.Init();
             LoadApplication(new App());
-
+            FormsVideoPlayer.Init();
             return base.FinishedLaunching(app, options);
         }
     }

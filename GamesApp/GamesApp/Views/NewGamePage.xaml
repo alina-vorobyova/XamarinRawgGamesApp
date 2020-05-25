@@ -48,11 +48,11 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout BackgroundColor="LightGray" HeightRequest="350">
-                       <Frame Padding="0" Margin="0">
+                        <Frame Padding="0" Margin="0">
                             <Image Aspect="AspectFill" Source="{Binding background_image}" HeightRequest="200"/>
-                       </Frame>
-                        <Label Text="{Binding name}" FontSize="20" FontAttributes="Bold" Margin="10,0,0,0"/>
-                        <StackLayout Padding="5,0,0,0" HeightRequest="10">
+                        </Frame>
+                        <Label Text="{Binding name}" FontSize="20" FontAttributes="Bold" Margin="20,0,0,0"/>
+                        <StackLayout Padding="20,0,0,0" HeightRequest="10">
                             <CollectionView ItemsSource="{Binding genres}" ItemsLayout="HorizontalList">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
@@ -61,16 +61,15 @@
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </StackLayout>
-                      
-                
+
                         <Label Text="{Binding genres.name}" Margin="10,0,0,0"/>
-                        <StackLayout Orientation="Horizontal" Padding="5,0,0,0">
-                            <Button Text="DETAILS" Command="{Binding Source={x:Reference Page}, Path=BindingContext.GameDetailCommand}" CommandParameter="{Binding .}"/>
-                            <Button Text="LIKE"/> 
+                        <StackLayout Orientation="Horizontal" Padding="20,0,0,0">
+                            <ImageButton Margin="0,0,10,0" HeightRequest="40" WidthRequest="40" Command="{Binding Source={x:Reference Page}, Path=BindingContext.GameDetailCommand}" CommandParameter="{Binding .}" Source="info" />
+                            <ImageButton Source="dislike" HeightRequest="40" WidthRequest="40" />
                         </StackLayout>
                     </StackLayout>
                 </DataTemplate>
-                </CollectionView.ItemTemplate>
+            </CollectionView.ItemTemplate>
         </CollectionView>
     </StackLayout>
 </ContentPage>

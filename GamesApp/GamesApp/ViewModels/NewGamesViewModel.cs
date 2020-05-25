@@ -44,6 +44,7 @@ namespace GamesApp.ViewModels
             set => Set(ref _isConnected, value);
         }
 
+       
 
         public Command LoadMoreGames { get; set; }
         public  Command GameDetailCommand { get; set; }
@@ -77,10 +78,12 @@ namespace GamesApp.ViewModels
                     var games = await _gameApiClient.GetAllNewReleasedGamesForLast30Days(_page);
                     if (games != null)
                         NewReleasedGames = new ObservableCollection<Game>(games.results);
+                    else
+                        await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
                 }
                 catch (Exception e)
                 {
-
+                   await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
                 }
             }
             else
@@ -109,10 +112,13 @@ namespace GamesApp.ViewModels
                             }
                             _loading = false;
                         }
+                        else 
+                            await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
                     }
                 }
                 catch (Exception e)
-                {
+                { 
+                   await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
                 }
             }
         }

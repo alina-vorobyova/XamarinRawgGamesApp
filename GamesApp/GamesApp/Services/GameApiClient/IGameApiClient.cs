@@ -11,5 +11,7 @@ namespace GamesApp.Services.GameApiClient
         Task<GameApiResponse> GetAllNewReleasedGamesForLast30Days(int page);
 
         Task<GameApiResponse> GetGamesByFilter(string year, string platform, string genre);
+
+        Task<GameDetailedResponse> GetGameById(int id);
     }
 }
