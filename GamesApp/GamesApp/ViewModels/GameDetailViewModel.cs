@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
+using System.Threading.Tasks;
 using GamesApp.Models;
 using GamesApp.Services.GameApiClient;
+using GamesApp.Services.LikedGameService;
 using MediaManager;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -12,6 +15,8 @@ namespace GamesApp.ViewModels
     public class GameDetailViewModel : ViewModelBase
     {
         private readonly IGameApiClient _gameApiClient;
+        private ObservableCollection<Game> _favoriteGames = new ObservableCollection<Game>();
+        private readonly IFavoriteGameService _favoriteGameService;
 
         private GameDetailedResponse _game;
         public GameDetailedResponse Game
@@ -42,11 +47,13 @@ namespace GamesApp.ViewModels
         }
 
         public Command ShareGameCommand { get; set; }
+        public Command LikeGameCommand { get; set; }
 
         public GameDetailViewModel()
         {
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
             _gameApiClient = DependencyService.Get<IGameApiClient>();
+            _favoriteGameService = DependencyService.Get<IFavoriteGameService>();
 
             MessagingCenter.Subscribe<NewGamesViewModel, Game>(this, "game_details", async (sender, message) =>
             {
@@ -55,8 +62,25 @@ namespace GamesApp.ViewModels
             });
 
             ShareGameCommand = new Command(ShareGame);
+            LikeGameCommand = new Command(LikeGame);
         }
 
+        private async void LikeGame()
+        {
+            Game.IsLiked = true;
+            await _favoriteGameService.LikeGameAsync(Game.id);
+            await Application.Current.MainPage.DisplayAlert("Like!", $"{Game.name} added to Favorites! 🎮", "Close");
+        }
+
+
+        private async Task<bool> CheckIsGameAlreadyLikedOrNot(int id)
+        {
+            bool isFav;
+            isFav = await _favoriteGameService.IsGameInFavorites(id);
+            return isFav;
+        }
+
+      
         private async void LoadGameFromApi(int gameId)
         {
             if (Connectivity.NetworkAccess == NetworkAccess.Internet)
@@ -65,9 +89,10 @@ namespace GamesApp.ViewModels
                 IsConnected = false;
                 try
                 {
-                    var game = await _gameApiClient.GetGameById(gameId);
+                    var game = await _gameApiClient.GetGameByIdAsync(gameId);
                     if (game != null)
-                    {
+                    { 
+                        game.IsLiked = await CheckIsGameAlreadyLikedOrNot(gameId);
                         Game = game;
                         if (Game.clip != null)
                             IsVideoExists = true;

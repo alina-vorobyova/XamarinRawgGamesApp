@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using GamesApp.Services;
 using GamesApp.Services.GameApiClient;
+using GamesApp.Services.LikedGameService;
 using GamesApp.ViewModels;
 using GamesApp.Views;
 using Xamarin.Essentials;
@@ -18,6 +19,7 @@ namespace GamesApp
 
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<IGameApiClient, GameApiClient>();
+            DependencyService.Register<IFavoriteGameService, FavoriteGameService>();
             MainPage = new MainPage();
         }
 

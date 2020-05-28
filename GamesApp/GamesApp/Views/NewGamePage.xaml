@@ -65,7 +65,20 @@
                         <Label Text="{Binding genres.name}" Margin="10,0,0,0"/>
                         <StackLayout Orientation="Horizontal" Padding="20,0,0,0">
                             <ImageButton Margin="0,0,10,0" HeightRequest="40" WidthRequest="40" Command="{Binding Source={x:Reference Page}, Path=BindingContext.GameDetailCommand}" CommandParameter="{Binding .}" Source="info" />
-                            <ImageButton Source="dislike" HeightRequest="40" WidthRequest="40" />
+                            <ImageButton Source="dislike" HeightRequest="40" WidthRequest="40" IsVisible="True" Command="{Binding Source={x:Reference Page}, Path=BindingContext.LikeGameCommand}" CommandParameter="{Binding .}">
+                                <ImageButton.Triggers>
+                                    <DataTrigger TargetType="ImageButton" Binding="{Binding IsLiked}" Value="True">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </ImageButton.Triggers>
+                            </ImageButton>
+                            <ImageButton Source="like" HeightRequest="40" WidthRequest="40" IsVisible="False">
+                                <ImageButton.Triggers>
+                                    <DataTrigger TargetType="ImageButton" Binding="{Binding IsLiked}" Value="True">
+                                        <Setter Property="IsVisible" Value="True" />
+                                    </DataTrigger>
+                                </ImageButton.Triggers>
+                            </ImageButton>
                         </StackLayout>
                     </StackLayout>
                 </DataTemplate>

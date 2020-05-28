@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Acr.UserDialogs;
 using GamesApp.Models;
 using GamesApp.Services.GameApiClient;
+using GamesApp.Services.LikedGameService;
 using GamesApp.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -17,8 +18,10 @@ namespace GamesApp.ViewModels
     public class NewGamesViewModel : ViewModelBase
     {
         private readonly IGameApiClient _gameApiClient;
+        private readonly IFavoriteGameService _favoriteGameService;
 
         private ObservableCollection<Game> _newReleasedGames = new ObservableCollection<Game>();
+        private ObservableCollection<Game> _favoriteGames = new ObservableCollection<Game>();
 
         private bool _loading = false;
 
@@ -28,6 +31,12 @@ namespace GamesApp.ViewModels
         {
             get => _newReleasedGames;
             set => Set(ref _newReleasedGames, value);
+        }
+
+        public ObservableCollection<Game> FavoriteGames
+        {
+            get => _favoriteGames;
+            set => Set(ref _favoriteGames, value);
         }
 
         private string _checkConnection;
@@ -43,19 +52,47 @@ namespace GamesApp.ViewModels
             get => _isConnected;
             set => Set(ref _isConnected, value);
         }
-
-       
-
+        
         public Command LoadMoreGames { get; set; }
-        public  Command GameDetailCommand { get; set; }
+        public Command GameDetailCommand { get; set; }
+        public Command LikeGameCommand { get; set; }
 
         public NewGamesViewModel()
         {
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
             _gameApiClient = DependencyService.Get<IGameApiClient>();
+            _favoriteGameService = DependencyService.Get<IFavoriteGameService>();
             LoadGamesFromApi();
             LoadMoreGames = new Command(LoadMoreGamesFromApi);
             GameDetailCommand = new Command<Game>(GameDetails);
+            LikeGameCommand = new Command<Game>(LikeGame);
+        }
+
+
+        private async Task<IEnumerable<Game>> CheckIsGameAlreadyLikedOrNot(List<Game> games)
+        {
+            bool isFav;
+            foreach (var gameFromApi in games)
+            {
+                isFav = await _favoriteGameService.IsGameInFavorites(gameFromApi.id);
+                gameFromApi.IsLiked = isFav;
+            }
+
+            return games;
+        }
+
+        private async Task<bool> CheckIsGameAlreadyLikedOrNot(int id)
+        {
+            bool isFav;
+            isFav = await _favoriteGameService.IsGameInFavorites(id);
+            return isFav;
+        }
+
+        private async void LikeGame(Game game)
+        {
+            game.IsLiked = true;
+            await _favoriteGameService.LikeGameAsync(game.id);
+            await Application.Current.MainPage.DisplayAlert("Like!", $"{game.name} added to Favorites! 🎮", "Close");
         }
 
         private async void GameDetails(Game game)
@@ -66,7 +103,7 @@ namespace GamesApp.ViewModels
         }
 
 
-        private async void LoadGamesFromApi()
+        private async Task LoadGamesFromApi()
         {
             if (Connectivity.NetworkAccess == NetworkAccess.Internet)
             {
@@ -75,15 +112,18 @@ namespace GamesApp.ViewModels
                 try
                 {
                     _page = 1;
-                    var games = await _gameApiClient.GetAllNewReleasedGamesForLast30Days(_page);
+                    var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(_page);
                     if (games != null)
-                        NewReleasedGames = new ObservableCollection<Game>(games.results);
+                    {
+                        var likesCheckedGames = await CheckIsGameAlreadyLikedOrNot(games.results);
+                        NewReleasedGames = new ObservableCollection<Game>(likesCheckedGames);
+                    }
                     else
                         await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
                 }
                 catch (Exception e)
                 {
-                   await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
+                    await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
                 }
             }
             else
@@ -103,22 +143,23 @@ namespace GamesApp.ViewModels
                     {
                         _loading = true;
                         _page++;
-                        var games = await _gameApiClient.GetAllNewReleasedGamesForLast30Days(_page);
+                        var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(_page);
                         if (games != null)
                         {
                             foreach (var item in games.results)
                             {
+                                item.IsLiked = await CheckIsGameAlreadyLikedOrNot(item.id);
                                 NewReleasedGames.Add(item);
                             }
                             _loading = false;
                         }
-                        else 
+                        else
                             await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
                     }
                 }
                 catch (Exception e)
-                { 
-                   await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
+                {
+                    await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
                 }
             }
         }

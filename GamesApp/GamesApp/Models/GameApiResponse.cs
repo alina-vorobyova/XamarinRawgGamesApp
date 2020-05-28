@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
+using GamesApp.Annotations;
 
 namespace GamesApp.Models
 {
@@ -9,12 +12,24 @@ namespace GamesApp.Models
         public int count { get; set; }
         public string next { get; set; }
         public object previous { get; set; }
-        public Game[] results { get; set; }
+        public List<Game> results { get; set; }
         public bool user_platforms { get; set; }
     }
 
-    public class Game
+    public class Game : INotifyPropertyChanged
     {
+        private bool _isLiked;
+
+        public bool IsLiked
+        {
+            get => _isLiked;
+            set
+            {
+                _isLiked = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string slug { get; set; }
         public string name { get; set; }
         public int playtime { get; set; }
@@ -44,6 +59,15 @@ namespace GamesApp.Models
         public Short_Screenshots[] short_screenshots { get; set; }
         public Parent_Platforms[] parent_platforms { get; set; }
         public Genre[] genres { get; set; }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
     public class Platform

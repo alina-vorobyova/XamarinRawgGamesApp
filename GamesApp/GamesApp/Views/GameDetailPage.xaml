@@ -7,7 +7,8 @@
              xmlns:videoPlayer="clr-namespace:Octane.Xamarin.Forms.VideoPlayer;assembly=Octane.Xamarin.Forms.VideoPlayer"
              mc:Ignorable="d"
              x:Class="GamesApp.Views.GameDetailPage"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             x:Name="Page">
     <ContentPage.Content>
         <ScrollView>
             <ScrollView.Padding>
@@ -42,7 +43,20 @@
                 />
                 <Label Text="{Binding Game.description}" Margin="20,0,20,0" FontSize="16"/>
                 <StackLayout Orientation="Horizontal" Padding="20,0,0,20">
-                    <ImageButton Source="dislike" HeightRequest="40" WidthRequest="40" /> 
+                    <ImageButton Source="dislike" HeightRequest="40" WidthRequest="40" IsVisible="True" Command="{Binding LikeGameCommand}" CommandParameter="{Binding .}">
+                        <ImageButton.Triggers>
+                            <DataTrigger TargetType="ImageButton" Binding="{Binding Game.IsLiked}" Value="True">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
+                    <ImageButton Source="like" HeightRequest="40" WidthRequest="40" IsVisible="False">
+                        <ImageButton.Triggers>
+                            <DataTrigger TargetType="ImageButton" Binding="{Binding Game.IsLiked}" Value="True">
+                                <Setter Property="IsVisible" Value="True" />
+                            </DataTrigger>
+                        </ImageButton.Triggers>
+                    </ImageButton>
                     <ImageButton Source="share" HeightRequest="45" WidthRequest="45" Command="{Binding ShareGameCommand}"/>
                 </StackLayout>
             </StackLayout>

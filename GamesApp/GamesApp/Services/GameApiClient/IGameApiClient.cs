@@ -8,10 +8,10 @@ namespace GamesApp.Services.GameApiClient
 {
     interface IGameApiClient
     {
-        Task<GameApiResponse> GetAllNewReleasedGamesForLast30Days(int page);
+        Task<GameApiResponse> GetAllNewReleasedGamesForLast30DaysAsync(int page);
 
         Task<GameApiResponse> GetGamesByFilter(string year, string platform, string genre);
 
-        Task<GameDetailedResponse> GetGameById(int id);
+        Task<GameDetailedResponse> GetGameByIdAsync(int id);
     }
 }

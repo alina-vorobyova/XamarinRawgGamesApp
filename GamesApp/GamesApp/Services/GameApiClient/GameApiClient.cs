@@ -20,12 +20,12 @@ namespace GamesApp.Services.GameApiClient
             _httpClient = new HttpClient();
         }
 
-        public async Task<GameApiResponse> GetAllNewReleasedGamesForLast30Days(int page)
+        public async Task<GameApiResponse> GetAllNewReleasedGamesForLast30DaysAsync(int page)
         {
             GameApiResponse games = null;
             var currentDate = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-{DateTime.Now.Day:D2}";
             var firstDayCurMonth = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-01";
-            var requestUri = $"{url}/games?dates={firstDayCurMonth},{currentDate}&ordering=released&page_size=10&page={page}&ordering=rating";
+            var requestUri = $"{url}/games?dates={firstDayCurMonth},{currentDate}&ordering=released&page_size=10&page={page}&ordering=-rating";
             var json =  await _httpClient.GetStringAsync(requestUri);
             if(json != null)
                  games = JsonConvert.DeserializeObject<GameApiResponse>(json);
@@ -37,7 +37,7 @@ namespace GamesApp.Services.GameApiClient
             throw new NotImplementedException();
         }
 
-        public async Task<GameDetailedResponse> GetGameById(int id)
+        public async Task<GameDetailedResponse> GetGameByIdAsync(int id)
         {
             GameDetailedResponse game = null;
             var requestUri = $"{url}/games/{id}";

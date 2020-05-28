@@ -1,11 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
+using GamesApp.Annotations;
 
 namespace GamesApp.Models
 {
-    public class GameDetailedResponse
+    public class GameDetailedResponse : INotifyPropertyChanged
     {
+        private bool _isLiked;
+
+        public bool IsLiked
+        {
+            get => _isLiked;
+            set
+            {
+                _isLiked = value;
+                OnPropertyChanged();
+            }
+        }
+
         public int id { get; set; }
         public string slug { get; set; }
         public string name { get; set; }
@@ -60,6 +75,13 @@ namespace GamesApp.Models
         public Esrb_Rating esrb_rating { get; set; }
         public Clip clip { get; set; }
         public string description_raw { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 
     public class Reactions
