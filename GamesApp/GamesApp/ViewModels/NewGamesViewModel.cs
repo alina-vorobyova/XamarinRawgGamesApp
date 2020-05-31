@@ -56,6 +56,7 @@ namespace GamesApp.ViewModels
         public Command LoadMoreGames { get; set; }
         public Command GameDetailCommand { get; set; }
         public Command LikeGameCommand { get; set; }
+        public Command DislikeGameCommand { get; set; }
 
         public NewGamesViewModel()
         {
@@ -66,9 +67,22 @@ namespace GamesApp.ViewModels
             LoadMoreGames = new Command(LoadMoreGamesFromApi);
             GameDetailCommand = new Command<Game>(GameDetails);
             LikeGameCommand = new Command<Game>(LikeGame);
+            DislikeGameCommand = new Command<Game>(DislikeGame);
+
+            MessagingCenter.Subscribe<GameDetailViewModel, GameDetailedResponse>(this, "game_liked", async (sender, message) =>
+            {
+                var gameForLikeCheck = NewReleasedGames.FirstOrDefault(x => x.id == message.id);
+                gameForLikeCheck.IsLiked = CheckIsGameAlreadyLikedOrNot(gameForLikeCheck.id).Result;
+            });
+
+            MessagingCenter.Subscribe<GameDetailViewModel, GameDetailedResponse>(this, "game_disliked", async (sender, message) =>
+            {
+                var gameForLikeCheck = NewReleasedGames.FirstOrDefault(x => x.id == message.id);
+                gameForLikeCheck.IsLiked = CheckIsGameAlreadyLikedOrNot(gameForLikeCheck.id).Result;
+            });
         }
 
-
+        
         private async Task<IEnumerable<Game>> CheckIsGameAlreadyLikedOrNot(List<Game> games)
         {
             bool isFav;
@@ -93,6 +107,13 @@ namespace GamesApp.ViewModels
             game.IsLiked = true;
             await _favoriteGameService.LikeGameAsync(game.id);
             await Application.Current.MainPage.DisplayAlert("Like!", $"{game.name} added to Favorites! 🎮", "Close");
+        }
+
+        private async void DislikeGame(Game game)
+        {
+            game.IsLiked = false;
+            await _favoriteGameService.DislikeGameAsync(game.id);
+            await Application.Current.MainPage.DisplayAlert("Dislike :(", $"{game.name} removed to Favorites! 🎮", "Close");
         }
 
         private async void GameDetails(Game game)

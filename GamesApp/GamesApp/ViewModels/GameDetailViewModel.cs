@@ -48,6 +48,8 @@ namespace GamesApp.ViewModels
 
         public Command ShareGameCommand { get; set; }
         public Command LikeGameCommand { get; set; }
+        public Command DislikeGameCommand { get; set; }
+
 
         public GameDetailViewModel()
         {
@@ -63,6 +65,7 @@ namespace GamesApp.ViewModels
 
             ShareGameCommand = new Command(ShareGame);
             LikeGameCommand = new Command(LikeGame);
+            DislikeGameCommand = new Command(DislikeGame);
         }
 
         private async void LikeGame()
@@ -70,8 +73,17 @@ namespace GamesApp.ViewModels
             Game.IsLiked = true;
             await _favoriteGameService.LikeGameAsync(Game.id);
             await Application.Current.MainPage.DisplayAlert("Like!", $"{Game.name} added to Favorites! 🎮", "Close");
+            MessagingCenter.Send(this, "game_liked", Game);
         }
 
+        private async void DislikeGame()
+        {
+            Game.IsLiked = false;
+            await _favoriteGameService.DislikeGameAsync(Game.id);
+            await Application.Current.MainPage.DisplayAlert("Dislike :(", $"{Game.name} removed to Favorites! 🎮", "Close");
+            MessagingCenter.Send(this, "game_disliked", Game);
+
+        }
 
         private async Task<bool> CheckIsGameAlreadyLikedOrNot(int id)
         {

@@ -29,12 +29,13 @@ namespace GamesApp.Services.LikedGameService
         public async Task LikeGameAsync(int gameId)
         {
             var gameDetails = new GameDetailedResponse();
-            if (File.Exists(FileName))
+            string path = Path.Combine(FileSystem.AppDataDirectory, FileName);
+            if (File.Exists(path))
             {
-                var file = File.ReadAllText(FileName);
+                var file = File.ReadAllText(path);
                 FavoriteGames = JsonConvert.DeserializeObject<Dictionary<int, GameDetailedResponse>>(file);
                 if (!FavoriteGames.ContainsKey(gameId))
-                { 
+                {
                     gameDetails = await _gameApiClient.GetGameByIdAsync(gameId);
                     gameDetails.IsLiked = true;
                     await SaveFavoriteGameToFileAsync(gameDetails);
@@ -48,9 +49,16 @@ namespace GamesApp.Services.LikedGameService
             }
         }
 
-        public Task DislikeGameAsync(int gameId)
+        public async Task DislikeGameAsync(int gameId)
         {
-            throw new NotImplementedException();
+            string path = Path.Combine(FileSystem.AppDataDirectory, FileName);
+            if (File.Exists(path))
+            {
+                var file = File.ReadAllText(path);
+                FavoriteGames = JsonConvert.DeserializeObject<Dictionary<int, GameDetailedResponse>>(file);
+                if (FavoriteGames.ContainsKey(gameId))
+                    await DeleteFavoriteGameFromFileAsync(gameId);
+            }
         }
 
         public Task RemoveAllFavoriteGamesAsync()
@@ -78,17 +86,9 @@ namespace GamesApp.Services.LikedGameService
             var favoriteGame = new GameDetailedResponse();
             if (FavoriteGames.Count == 0)
             {
-                try
-                {
-                    FavoriteGames = (await GetAllFavoriteGamesAsync()).ToDictionary(x => x.id, x => x);
-                    if (FavoriteGames.ContainsKey(id))
-                        favoriteGame = FavoriteGames[id];
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-               
+                FavoriteGames = (await GetAllFavoriteGamesAsync()).ToDictionary(x => x.id, x => x);
+                if (FavoriteGames.ContainsKey(id))
+                    favoriteGame = FavoriteGames[id];
             }
             else
             {
@@ -101,7 +101,19 @@ namespace GamesApp.Services.LikedGameService
         private async Task SaveFavoriteGameToFileAsync(GameDetailedResponse game)
         {
             FavoriteGames.Add(game.id, game);
-            var json = JsonConvert.SerializeObject(FavoriteGames);
+            await SaveFileAsync(FavoriteGames);
+        }
+
+        private async Task DeleteFavoriteGameFromFileAsync(int gameId)
+        {
+            FavoriteGames.Remove(gameId);
+            await SaveFileAsync(FavoriteGames);
+
+        }
+
+        private async Task SaveFileAsync(Dictionary<int, GameDetailedResponse> favGames)
+        {
+            var json = JsonConvert.SerializeObject(favGames);
             var filename = Path.Combine(FileSystem.AppDataDirectory, FileName);
 
             using (var fs = new FileStream(filename, FileMode.Create))

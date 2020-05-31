@@ -72,7 +72,7 @@
                                     </DataTrigger>
                                 </ImageButton.Triggers>
                             </ImageButton>
-                            <ImageButton Source="like" HeightRequest="40" WidthRequest="40" IsVisible="False">
+                            <ImageButton Source="like" HeightRequest="40" WidthRequest="40" IsVisible="False" Command="{Binding Source={x:Reference Page}, Path=BindingContext.DislikeGameCommand}" CommandParameter="{Binding .}">
                                 <ImageButton.Triggers>
                                     <DataTrigger TargetType="ImageButton" Binding="{Binding IsLiked}" Value="True">
                                         <Setter Property="IsVisible" Value="True" />

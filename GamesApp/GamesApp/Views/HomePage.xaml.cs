@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using GamesApp.ViewModels;
+using GamesApp.Models;
 
 namespace GamesApp.Views
 {
@@ -16,5 +18,11 @@ namespace GamesApp.Views
         {
             InitializeComponent();
         }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return base.OnBackButtonPressed();
+        }
+       
     }
 }
