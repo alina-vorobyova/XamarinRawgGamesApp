@@ -6,7 +6,7 @@ using GamesApp.Models;
 
 namespace GamesApp.Services.LikedGameService
 {
-    interface IFavoriteGameService
+    public interface IFavoriteGameService
     {
         Task LikeGameAsync(int gameId);
 

@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using GamesApp.ViewModels;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using GamesApp.ViewModels;
-using GamesApp.Models;
 
 namespace GamesApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class HomePage : TabbedPage
+    public partial class FavoriteGamesPage : ContentPage
     {
-        public HomePage()
+        public FavoriteGamesPage()
         {
             InitializeComponent();
+            BindingContext = new FavoriteGamesViewModel();
         }
-      
     }
 }

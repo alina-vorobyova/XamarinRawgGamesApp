@@ -25,6 +25,7 @@ namespace GamesApp.ViewModels
             set => Set(ref _game, value);
         }
 
+
         private bool _isConnected;
         public bool IsConnected
         {
@@ -62,6 +63,13 @@ namespace GamesApp.ViewModels
                 LoadGameFromApi(message.id);
                 Title = $"Details about: {message.name}";
             });
+
+            MessagingCenter.Subscribe<FavoriteGamesViewModel, GameDetailedResponse>(this, "game_details", async (sender, message) =>
+            {
+                LoadGameFromApi(message.id);
+                Title = $"Details about: {message.name}";
+            });
+
 
             ShareGameCommand = new Command(ShareGame);
             LikeGameCommand = new Command(LikeGame);

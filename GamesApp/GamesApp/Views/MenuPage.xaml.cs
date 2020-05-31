@@ -20,8 +20,8 @@ namespace GamesApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Home, Title="Home" },
-                new HomeMenuItem {Id = MenuItemType.About, Title="About" }
+                new HomeMenuItem {Id = MenuItemType.Home, Title="Main" },
+                new HomeMenuItem {Id = MenuItemType.Favorites, Title="Favorite Games" }
             };
 
             ListViewMenu.ItemsSource = menuItems;

@@ -7,7 +7,7 @@ namespace GamesApp.Models
     public enum MenuItemType
     {
         Home,
-        About
+        Favorites
     }
     public class HomeMenuItem
     {

@@ -33,8 +33,8 @@ namespace GamesApp.Views
                     case (int)MenuItemType.Home:
                         MenuPages.Add(id, new NavigationPage(new HomePage()));
                         break;
-                    case (int)MenuItemType.About:
-                        MenuPages.Add(id, new NavigationPage(new AboutPage()));
+                    case (int)MenuItemType.Favorites:
+                        MenuPages.Add(id, new NavigationPage(new FavoriteGamesPage()));
                         break;
                 }
             }
