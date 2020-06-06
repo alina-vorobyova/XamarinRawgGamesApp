@@ -52,7 +52,7 @@ namespace GamesApp.ViewModels
             get => _isConnected;
             set => Set(ref _isConnected, value);
         }
-        
+
         public Command LoadMoreGames { get; set; }
         public Command GameDetailCommand { get; set; }
         public Command LikeGameCommand { get; set; }
@@ -71,18 +71,34 @@ namespace GamesApp.ViewModels
 
             MessagingCenter.Subscribe<GameDetailViewModel, GameDetailedResponse>(this, "game_liked", async (sender, message) =>
             {
-                var gameForLikeCheck = NewReleasedGames.FirstOrDefault(x => x.id == message.id);
-                gameForLikeCheck.IsLiked = CheckIsGameAlreadyLikedOrNot(gameForLikeCheck.id).Result;
+                await GameFavoriteInfoChanged(message.id);
             });
 
             MessagingCenter.Subscribe<GameDetailViewModel, GameDetailedResponse>(this, "game_disliked", async (sender, message) =>
             {
-                var gameForLikeCheck = NewReleasedGames.FirstOrDefault(x => x.id == message.id);
-                gameForLikeCheck.IsLiked = CheckIsGameAlreadyLikedOrNot(gameForLikeCheck.id).Result;
+                await GameFavoriteInfoChanged(message.id);
+            });
+
+            MessagingCenter.Subscribe<FavoriteGamesViewModel, GameDetailedResponse>(this, "game_disliked", async (sender, message) =>
+            {
+                await GameFavoriteInfoChanged(message.id);
+            });
+
+            MessagingCenter.Subscribe<FavoriteGamesViewModel>(this, "all_games_disliked", async (sender) =>
+            {
+                var likesCheckedGames = await CheckIsGameAlreadyLikedOrNot(NewReleasedGames.ToList());
+                NewReleasedGames = new ObservableCollection<Game>(likesCheckedGames);
             });
         }
 
-        
+
+        private async Task GameFavoriteInfoChanged(int gameId)
+        {
+            var gameForLikeCheck = NewReleasedGames.FirstOrDefault(x => x.id == gameId);
+            if (gameForLikeCheck != null)
+                gameForLikeCheck.IsLiked = await CheckIsGameAlreadyLikedOrNot(gameForLikeCheck.id);
+        }
+
         private async Task<IEnumerable<Game>> CheckIsGameAlreadyLikedOrNot(List<Game> games)
         {
             bool isFav;
@@ -107,6 +123,7 @@ namespace GamesApp.ViewModels
             game.IsLiked = true;
             await _favoriteGameService.LikeGameAsync(game.id);
             await Application.Current.MainPage.DisplayAlert("Like!", $"{game.name} added to Favorites! 🎮", "Close");
+            MessagingCenter.Send(this, "game_liked", game);
         }
 
         private async void DislikeGame(Game game)
@@ -114,6 +131,7 @@ namespace GamesApp.ViewModels
             game.IsLiked = false;
             await _favoriteGameService.DislikeGameAsync(game.id);
             await Application.Current.MainPage.DisplayAlert("Dislike :(", $"{game.name} removed to Favorites! 🎮", "Close");
+            MessagingCenter.Send(this, "game_disliked", game);
         }
 
         private async void GameDetails(Game game)

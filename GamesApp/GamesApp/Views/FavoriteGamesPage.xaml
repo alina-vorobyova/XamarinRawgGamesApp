@@ -6,7 +6,8 @@
              mc:Ignorable="d"
              x:Class="GamesApp.Views.FavoriteGamesPage"
              x:Name="Page">
-    <ContentPage.Content>
+    <StackLayout>
+        <Button Text="Dislike All" Command="{Binding DislikeAllGamesCommand}" IsVisible="{Binding IsFavExists}"/>
         <ScrollView>
             <ScrollView.Padding>
                 <OnPlatform x:TypeArguments="Thickness">
@@ -16,6 +17,7 @@
                     </OnPlatform.Platforms>
                 </OnPlatform>
             </ScrollView.Padding>
+
             <CollectionView 
             x:Name="CollectionView" 
             VerticalOptions="FillAndExpand" 
@@ -68,5 +70,6 @@
             </CollectionView>
 
         </ScrollView>
-    </ContentPage.Content>
+    </StackLayout>
+      
 </ContentPage>

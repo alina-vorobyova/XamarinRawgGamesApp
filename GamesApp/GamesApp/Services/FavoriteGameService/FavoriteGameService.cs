@@ -33,7 +33,9 @@ namespace GamesApp.Services.LikedGameService
             if (File.Exists(path))
             {
                 var file = File.ReadAllText(path);
-                FavoriteGames = JsonConvert.DeserializeObject<Dictionary<int, GameDetailedResponse>>(file);
+                if (!string.IsNullOrEmpty(file))
+                    FavoriteGames = JsonConvert.DeserializeObject<Dictionary<int, GameDetailedResponse>>(file);
+
                 if (!FavoriteGames.ContainsKey(gameId))
                 {
                     gameDetails = await _gameApiClient.GetGameByIdAsync(gameId);
@@ -55,28 +57,44 @@ namespace GamesApp.Services.LikedGameService
             if (File.Exists(path))
             {
                 var file = File.ReadAllText(path);
-                FavoriteGames = JsonConvert.DeserializeObject<Dictionary<int, GameDetailedResponse>>(file);
+                if(!string.IsNullOrEmpty(file))
+                    FavoriteGames = JsonConvert.DeserializeObject<Dictionary<int, GameDetailedResponse>>(file);
                 if (FavoriteGames.ContainsKey(gameId))
                     await DeleteFavoriteGameFromFileAsync(gameId);
             }
         }
 
-        public Task RemoveAllFavoriteGamesAsync()
+        public async Task RemoveAllFavoriteGamesAsync()
         {
-            throw new NotImplementedException();
+            string path = Path.Combine(FileSystem.AppDataDirectory, FileName);
+            if (File.Exists(path))
+            {
+                var file = File.ReadAllText(path);
+                if(string.IsNullOrEmpty(file))
+                    FavoriteGames = JsonConvert.DeserializeObject<Dictionary<int, GameDetailedResponse>>(file);
+                if (FavoriteGames.Count > 0)
+                {
+                    FavoriteGames.Clear();
+                    await SaveFileAsync(FavoriteGames);
+                }
+            }
         }
 
         public async Task<IEnumerable<GameDetailedResponse>> GetAllFavoriteGamesAsync()
         {
             var filename = Path.Combine(FileSystem.AppDataDirectory, FileName);
-
             using (var fs = new FileStream(filename, FileMode.OpenOrCreate))
             {
                 using (var stream = new StreamReader(fs))
                 {
                     var file = await stream.ReadToEndAsync();
-                    var favoriteGamesDictionary = JsonConvert.DeserializeObject<Dictionary<int, GameDetailedResponse>>(file);
-                    return favoriteGamesDictionary.Select(x => x.Value);
+                    if (!string.IsNullOrEmpty(file))
+                    {
+                        var favoriteGamesDictionary = JsonConvert.DeserializeObject<Dictionary<int, GameDetailedResponse>>(file);
+                        return favoriteGamesDictionary.Select(x => x.Value);
+                    }
+
+                    return Enumerable.Empty<GameDetailedResponse>();
                 }
             }
         }
