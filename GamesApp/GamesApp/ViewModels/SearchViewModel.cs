@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using Acr.UserDialogs;
-using GamesApp.Models;
 using GamesApp.Services.GameApiClient;
-using GamesApp.Services.LikedGameService;
-using GamesApp.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace GamesApp.ViewModels
 {
-    public class NewGamesViewModel : GamesViewModel
+    public class SearchViewModel : GamesViewModel
     {
         private readonly IGameApiClient _gameApiClient;
         private int _page;
-        public NewGamesViewModel()
+        public SearchViewModel()
         {
             _gameApiClient = DependencyService.Get<IGameApiClient>();
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
@@ -30,14 +23,14 @@ namespace GamesApp.ViewModels
         public async Task LoadNewGames()
         {
             _page = 1;
-            var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(_page);
+            var games = await _gameApiClient.GetGamesByNameAsync("witcher", _page);
             await LoadGamesFromApi(games);
         }
 
         public async void LoadMoreGames()
         {
             _page++;
-            var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(_page);
+            var games = await _gameApiClient.GetGamesByNameAsync("witcher", _page);
             LoadMoreGamesFromApi(games);
         }
 

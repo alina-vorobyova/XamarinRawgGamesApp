@@ -8,5 +8,5 @@
             x:Class="GamesApp.Views.HomePage"
             Title="Games">
     <views:NewGamePage />
-    <views:AboutPage/>
+    <views:SearchGamePage/>
 </TabbedPage>

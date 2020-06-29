@@ -43,18 +43,22 @@ namespace GamesApp.Services.GameApiClient
             var requestUri = $"{url}/games/{id}";
             var json = await _httpClient.GetStringAsync(requestUri);
             if (json != null)
-                try
-                {
-                    game = JsonConvert.DeserializeObject<GameDetailedResponse>(json);
-                    string pattern = @"<(.|\n)*?/>";
-                    game.description = Regex.Replace(game.description, pattern, string.Empty);
-                    game.description = Regex.Replace(game.description, "<br/>", string.Empty);
-                }
-                catch (Exception e)
-                {
-                  
-                }
+            {
+                game = JsonConvert.DeserializeObject<GameDetailedResponse>(json);
+                string pattern = @"<(.|\n)*?/>";
+                game.description = Regex.Replace(game.description, pattern, string.Empty);
+            }
             return game;
+        }
+
+        public async Task<GameApiResponse> GetGamesByNameAsync(string gameName, int page)
+        {
+            GameApiResponse games = null;
+            var requestUri = $"{url}/games?search={gameName}&ordering=released&page_size=10&page={page}&ordering=-rating";
+            var json = await _httpClient.GetStringAsync(requestUri);
+            if (json != null)
+                games = JsonConvert.DeserializeObject<GameApiResponse>(json);
+            return games;
         }
     }
 }

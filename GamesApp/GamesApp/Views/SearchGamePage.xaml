@@ -5,8 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:views="clr-namespace:GamesApp.Views;assembly=GamesApp"
              mc:Ignorable="d"
-             x:Class="GamesApp.Views.NewGamePage"
-             Title="NEW"
+             x:Class="GamesApp.Views.SearchGamePage"
              x:Name="Page">
 
     <views:MyCustomView/>

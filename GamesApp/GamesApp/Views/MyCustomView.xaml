@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="GamesApp.Views.MyCustomView"
+             x:Name="Page">
+    <StackLayout>
+        <StackLayout.Padding>
+            <OnPlatform x:TypeArguments="Thickness">
+                <OnPlatform.Platforms>
+                    <On Platform="iOS" Value="0,20,0,0"/>
+                    <On Platform="Android" Value="0,0,0,0"/>
+                </OnPlatform.Platforms>
+            </OnPlatform>
+        </StackLayout.Padding>
+
+        <SearchBar />
+
+        <Grid Padding="10" HeightRequest="60">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Picker />
+            <Button Grid.Column="1"  Text="Filter"/>
+        </Grid>
+
+        <Label  Text="{Binding CheckConnection}"  IsVisible="{Binding IsConnected}" HorizontalOptions="CenterAndExpand" FontSize="20" FontAttributes="Bold" />
+        <Image Source="gaming.jpg" HeightRequest="100" HorizontalOptions="Center"  IsVisible="{Binding IsConnected}" />
+        <CollectionView 
+            x:Name="CollectionView" 
+            VerticalOptions="FillAndExpand" 
+            SelectionMode="Single" 
+            ItemsSource="{Binding NewReleasedGames}" 
+            RemainingItemsThreshold="0" 
+            RemainingItemsThresholdReached="OnRemainingItemsThresholdReached">
+            <!--<CollectionView.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Baboon</x:String>
+                    <x:String>Baboon</x:String>
+                </x:Array>
+            </CollectionView.ItemsSource>-->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout BackgroundColor="LightGray" HeightRequest="350">
+                        <Frame Padding="0" Margin="0">
+                            <Image Aspect="AspectFill" Source="{Binding background_image}" HeightRequest="200"/>
+                        </Frame>
+                        <Label Text="{Binding name}" FontSize="20" FontAttributes="Bold" Margin="20,0,0,0"/>
+                        <StackLayout Padding="20,0,0,0" HeightRequest="10">
+                            <CollectionView ItemsSource="{Binding genres}" ItemsLayout="HorizontalList">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Text="{Binding name, StringFormat=' {0}'}" />
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </StackLayout>
+
+                        <Label Text="{Binding genres.name}" Margin="10,0,0,0"/>
+                        <StackLayout Orientation="Horizontal" Padding="20,0,0,0">
+                            <ImageButton Margin="0,0,10,0" HeightRequest="40" WidthRequest="40" Command="{Binding Source={x:Reference Page}, Path=BindingContext.GameDetailCommand}" CommandParameter="{Binding .}" Source="info" />
+                            <ImageButton Source="dislike" HeightRequest="40" WidthRequest="40" IsVisible="True" Command="{Binding Source={x:Reference Page}, Path=BindingContext.LikeGameCommand}" CommandParameter="{Binding .}">
+                                <ImageButton.Triggers>
+                                    <DataTrigger TargetType="ImageButton" Binding="{Binding IsLiked}" Value="True">
+                                        <Setter Property="IsVisible" Value="False" />
+                                    </DataTrigger>
+                                </ImageButton.Triggers>
+                            </ImageButton>
+                            <ImageButton Source="like" HeightRequest="40" WidthRequest="40" IsVisible="False" Command="{Binding Source={x:Reference Page}, Path=BindingContext.DislikeGameCommand}" CommandParameter="{Binding .}">
+                                <ImageButton.Triggers>
+                                    <DataTrigger TargetType="ImageButton" Binding="{Binding IsLiked}" Value="True">
+                                        <Setter Property="IsVisible" Value="True" />
+                                    </DataTrigger>
+                                </ImageButton.Triggers>
+                            </ImageButton>
+                        </StackLayout>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentView>

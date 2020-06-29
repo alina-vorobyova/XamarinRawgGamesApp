@@ -58,7 +58,7 @@ namespace GamesApp.ViewModels
             _gameApiClient = DependencyService.Get<IGameApiClient>();
             _favoriteGameService = DependencyService.Get<IFavoriteGameService>();
 
-            MessagingCenter.Subscribe<NewGamesViewModel, Game>(this, "game_details", async (sender, message) =>
+            MessagingCenter.Subscribe<GamesViewModel, Game>(this, "game_details", async (sender, message) =>
             {
                 LoadGameFromApi(message.id);
                 Title = $"Details about: {message.name}";

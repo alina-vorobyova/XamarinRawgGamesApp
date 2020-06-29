@@ -55,13 +55,13 @@ namespace GamesApp.ViewModels
                     await AddedToFavorites(message.id);
             });
 
-            MessagingCenter.Subscribe<NewGamesViewModel, Game>(this, "game_liked", async (sender, message) =>
+            MessagingCenter.Subscribe<GamesViewModel, Game>(this, "game_liked", async (sender, message) =>
             {
                 if (message != null)
                     await AddedToFavorites(message.id);
             });
 
-            MessagingCenter.Subscribe<NewGamesViewModel, Game>(this, "game_disliked", async (sender, message) =>
+            MessagingCenter.Subscribe<GamesViewModel, Game>(this, "game_disliked", async (sender, message) =>
             {
                 if (message != null)
                     await RemovedFromFavorites(message.id);
