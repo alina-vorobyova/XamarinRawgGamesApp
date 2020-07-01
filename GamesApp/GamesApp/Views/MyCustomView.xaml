@@ -22,8 +22,8 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Picker />
-            <Button Grid.Column="1"  Text="Filter"/>
+            <Entry IsReadOnly="True" Text="Order by:"/>
+            <Button Grid.Column="1"  Text="Add filter" Command="{Binding OpenFiltersModalPage}"/>
         </Grid>
 
         <Label  Text="{Binding CheckConnection}"  IsVisible="{Binding IsConnected}" HorizontalOptions="CenterAndExpand" FontSize="20" FontAttributes="Bold" />

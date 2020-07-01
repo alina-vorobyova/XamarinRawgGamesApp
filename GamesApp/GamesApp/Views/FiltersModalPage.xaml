@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="GamesApp.Views.FiltersModalPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <Label Text="Year" FontSize="30"/>
+                <Entry Placeholder="StringFormat='Indicate year. Example: 2020" Text="{Binding YearParam}"/>
+            </StackLayout>
+            <Button Text="Apply" Clicked="Button_OnClicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

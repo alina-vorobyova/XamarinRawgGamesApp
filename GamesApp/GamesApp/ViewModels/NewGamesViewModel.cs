@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Acr.UserDialogs;
+using GamesApp.Dtos;
 using GamesApp.Models;
 using GamesApp.Services.GameApiClient;
 using GamesApp.Services.LikedGameService;
@@ -25,12 +26,24 @@ namespace GamesApp.ViewModels
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
             LoadNewGames();
             LoadMoreGamesCommand = new Command(LoadMoreGames);
+            //AddSearchFiltersCommand = new Command(LoadNewGames);
+
+            MessagingCenter.Subscribe<FiltersModalPage, string>(this, "search_filters", async (sender, message) =>
+            {
+                YearParam = message;
+                LoadNewGames();
+            });
         }
 
-        public async Task LoadNewGames()
+        public async void LoadNewGames()
         {
             _page = 1;
-            var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(_page);
+            //var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(_page);
+            var searchFiltersDto = new SearchFiltersDto
+            {
+                Year = YearParam
+            };
+            var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(searchFiltersDto, _page);
             await LoadGamesFromApi(games);
         }
 

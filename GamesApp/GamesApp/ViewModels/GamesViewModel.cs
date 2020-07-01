@@ -56,10 +56,19 @@ namespace GamesApp.ViewModels
             set => Set(ref _searchGame, value);
         }
 
+        private string _yearParam;
+        public string YearParam
+        {
+            get => _yearParam;
+            set => Set(ref _yearParam, value);
+        }
+
         public Command LoadMoreGamesCommand { get; set; }
         public Command GameDetailCommand { get; set; }
         public Command LikeGameCommand { get; set; }
         public Command DislikeGameCommand { get; set; }
+        public Command AddSearchFiltersCommand { get; set; }
+        public Command OpenFiltersModalPage { get; set; }
 
         public GamesViewModel()
         {
@@ -68,6 +77,7 @@ namespace GamesApp.ViewModels
             GameDetailCommand = new Command<Game>(GameDetails);
             LikeGameCommand = new Command<Game>(LikeGame);
             DislikeGameCommand = new Command<Game>(DislikeGame);
+            OpenFiltersModalPage = new Command(OpenFiltersPage);
 
             MessagingCenter.Subscribe<GameDetailViewModel, GameDetailedResponse>(this, "game_liked", async (sender, message) =>
             {
@@ -91,6 +101,11 @@ namespace GamesApp.ViewModels
             });
         }
 
+        protected async void OpenFiltersPage()
+        {
+            var filtersPage = (Application.Current.MainPage as MasterDetailPage)?.Detail;
+            await filtersPage.Navigation?.PushModalAsync(new FiltersModalPage());
+        }
 
         protected async Task GameFavoriteInfoChanged(int gameId)
         {
