@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="GamesApp.Views.CustomTitleView">
+    <ContentView.Content>
+        <StackLayout>
+            <!--<SearchBar HeightRequest="60" PlaceholderColor="White" Placeholder="Search game" HorizontalOptions="Center" Margin="20,0,0,0" TextColor="White"/>-->
+            <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand" Margin="0,0,40,0">
+                <Entry x:Name="SearchEntry" Completed="Entry_OnCompleted" Placeholder="Search Game" WidthRequest="250" TextColor="White" ClearButtonVisibility="WhileEditing" Text="{Binding SearchGame}"/>
+                <Image Source="search.png" HeightRequest="35" WidthRequest="35"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

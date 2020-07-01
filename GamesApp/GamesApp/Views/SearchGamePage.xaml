@@ -6,7 +6,7 @@
              xmlns:views="clr-namespace:GamesApp.Views;assembly=GamesApp"
              mc:Ignorable="d"
              x:Class="GamesApp.Views.SearchGamePage"
-             x:Name="Page">
-
+             Title="{Binding SearchGame, StringFormat='Search results: {0}'}">
+                
     <views:MyCustomView/>
 </ContentPage>

@@ -5,7 +5,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              x:Class="GamesApp.Views.FavoriteGamesPage"
-             x:Name="Page">
+             x:Name="Page"
+             Title="My favorite games">
     <StackLayout>
         <Button Text="Dislike All" Command="{Binding DislikeAllGamesCommand}" IsVisible="{Binding IsFavExists}"/>
         <ScrollView>

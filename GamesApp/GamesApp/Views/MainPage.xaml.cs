@@ -51,5 +51,6 @@ namespace GamesApp.Views
                 IsPresented = false;
             }
         }
+
     }
 }

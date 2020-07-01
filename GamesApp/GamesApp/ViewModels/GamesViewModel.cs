@@ -49,6 +49,13 @@ namespace GamesApp.ViewModels
             set => Set(ref _isConnected, value);
         }
 
+        private string _searchGame;
+        public string SearchGame
+        {
+            get => _searchGame;
+            set => Set(ref _searchGame, value);
+        }
+
         public Command LoadMoreGamesCommand { get; set; }
         public Command GameDetailCommand { get; set; }
         public Command LikeGameCommand { get; set; }

@@ -20,8 +20,8 @@ namespace GamesApp.Views
 
             menuItems = new List<HomeMenuItem>
             {
-                new HomeMenuItem {Id = MenuItemType.Home, Title="Main" },
-                new HomeMenuItem {Id = MenuItemType.Favorites, Title="Favorite Games" }
+                new HomeMenuItem {Id = MenuItemType.Home, Title="Main", ImageUrl = "gamepad.png" },
+                new HomeMenuItem {Id = MenuItemType.Favorites, Title="Favorite Games", ImageUrl = "like.png" }
             };
 
             ListViewMenu.ItemsSource = menuItems;
@@ -36,5 +36,7 @@ namespace GamesApp.Views
                 await RootPage.NavigateFromMenu(id);
             };
         }
+
+
     }
 }

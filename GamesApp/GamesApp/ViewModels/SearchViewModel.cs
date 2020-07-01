@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using GamesApp.Services.GameApiClient;
+using GamesApp.Views;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -18,19 +19,29 @@ namespace GamesApp.ViewModels
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
             LoadNewGames();
             LoadMoreGamesCommand = new Command(LoadMoreGames);
+            MessagingCenter.Subscribe<CustomTitleView, string>(this, "search_game", async (sender, message) =>
+            {
+                SearchGame = message;
+                await LoadNewGames();
+            });
         }
+
+       
 
         public async Task LoadNewGames()
         {
             _page = 1;
-            var games = await _gameApiClient.GetGamesByNameAsync("witcher", _page);
-            await LoadGamesFromApi(games);
+            if (!string.IsNullOrWhiteSpace(SearchGame))
+            {
+                var games = await _gameApiClient.GetGamesByNameAsync(SearchGame, _page);
+                await LoadGamesFromApi(games);
+            }
         }
 
         public async void LoadMoreGames()
         {
             _page++;
-            var games = await _gameApiClient.GetGamesByNameAsync("witcher", _page);
+            var games = await _gameApiClient.GetGamesByNameAsync(SearchGame, _page);
             LoadMoreGamesFromApi(games);
         }
 

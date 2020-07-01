@@ -16,8 +16,6 @@
             </OnPlatform>
         </StackLayout.Padding>
 
-        <SearchBar />
-
         <Grid Padding="10" HeightRequest="60">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>

@@ -24,8 +24,10 @@ namespace GamesApp.Services.GameApiClient
         {
             GameApiResponse games = null;
             var currentDate = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-{DateTime.Now.Day:D2}";
-            var firstDayCurMonth = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-01";
-            var requestUri = $"{url}/games?dates={firstDayCurMonth},{currentDate}&ordering=released&page_size=10&page={page}&ordering=-rating";
+            var thirtyDaysBeforeDateTime = DateTime.Today.AddDays(-30);
+            var thirtyDaysBefore = $"{thirtyDaysBeforeDateTime.Year}-{thirtyDaysBeforeDateTime.Month:D2}-{thirtyDaysBeforeDateTime.Day:D2}";
+            //$"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-01";
+            var requestUri = $"{url}/games?dates={thirtyDaysBefore},{currentDate}&ordering=released&page_size=10&page={page}&ordering=-rating";
             var json =  await _httpClient.GetStringAsync(requestUri);
             if(json != null)
                  games = JsonConvert.DeserializeObject<GameApiResponse>(json);

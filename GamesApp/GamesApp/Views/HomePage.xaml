@@ -6,7 +6,7 @@
             xmlns:views="clr-namespace:GamesApp.Views;assembly=GamesApp"
             mc:Ignorable="d"
             x:Class="GamesApp.Views.HomePage"
-            Title="Games">
+            Style="{StaticResource CustomPage}">
     <views:NewGamePage />
     <views:SearchGamePage/>
 </TabbedPage>

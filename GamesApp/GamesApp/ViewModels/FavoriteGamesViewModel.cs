@@ -99,7 +99,10 @@ namespace GamesApp.ViewModels
             var favGames = await _favoriteGameService.GetAllFavoriteGamesAsync();
             FavoriteGames = new ObservableCollection<GameDetailedResponse>(favGames);
             if (FavoriteGames.Count > 0)
+            {
                 IsFavExists = true;
+                FavoriteGames = new ObservableCollection<GameDetailedResponse>(FavoriteGames.Reverse());
+            }
             else
                 IsFavExists = false;
         }

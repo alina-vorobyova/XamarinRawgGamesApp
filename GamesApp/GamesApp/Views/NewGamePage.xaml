@@ -6,8 +6,7 @@
              xmlns:views="clr-namespace:GamesApp.Views;assembly=GamesApp"
              mc:Ignorable="d"
              x:Class="GamesApp.Views.NewGamePage"
-             Title="NEW"
-             x:Name="Page">
+             Title="NEW">
 
     <views:MyCustomView/>
 </ContentPage>
