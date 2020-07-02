@@ -24,7 +24,19 @@
                 <Label Text="Genre:" FontSize="25" FontAttributes="Bold" Grid.Column="0"/>
                 <Picker x:Name="GenresPicker" ItemsSource="{Binding Genres}" ItemDisplayBinding="{Binding slug}" Grid.Column="1" SelectedItem="{Binding Genre}"/>
             </Grid>
-            <Button Text="Apply" Clicked="Button_OnClicked" Command="{Binding AddSearchFiltersCommand}" CommandParameter="{Binding SelectedItem, Source={x:Reference GenresPicker}}"/>
+
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="Platform:" FontSize="25" FontAttributes="Bold" Grid.Column="0"/>
+                <Picker x:Name="PlatformsPicker" ItemsSource="{Binding Platforms}" ItemDisplayBinding="{Binding slug}" Grid.Column="1" SelectedItem="{Binding Platform}"/>
+            </Grid>
+
+
+            <Button Text="Apply" Clicked="Button_OnClicked" Command="{Binding AddSearchFiltersCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -90,6 +90,16 @@ namespace GamesApp.Services.GameApiClient
             return genreApiResponse;
         }
 
+        public async Task<PlatformApiResponse> GetAllPlatforms()
+        {
+            PlatformApiResponse platformsApiResponse = null;
+            var requestUri = $"{urlApi}/platforms";
+            var json = await _httpClient.GetStringAsync(requestUri);
+            if (json != null)
+                platformsApiResponse = JsonConvert.DeserializeObject<PlatformApiResponse>(json);
+            return platformsApiResponse;
+        }
+
         private string AddFiltersToUri(Dictionary<string, string> searchFilters, string requestUri)
         {
             var requestUriWithFilters = new StringBuilder(requestUri);

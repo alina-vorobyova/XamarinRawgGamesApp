@@ -65,8 +65,8 @@ namespace GamesApp.ViewModels
             set => Set(ref _yearParam, value);
         }
 
-        private string _platform;
-        public string Platform
+        private PlatformResult _platform;
+        public PlatformResult Platform
         {
             get => _platform;
             set => Set(ref _platform, value);
@@ -94,7 +94,7 @@ namespace GamesApp.ViewModels
             LikeGameCommand = new Command<Game>(LikeGame);
             DislikeGameCommand = new Command<Game>(DislikeGame);
             OpenFiltersModalPage = new Command(OpenFiltersPage);
-            AddSearchFiltersCommand = new Command<GenreResult>(AddFilters);
+            AddSearchFiltersCommand = new Command(AddFilters);
 
             FiltersDictionary.Add("year", YearParam);
 
@@ -120,11 +120,12 @@ namespace GamesApp.ViewModels
             });
         }
 
-        protected void AddFilters(GenreResult selectedItem)
+        protected void AddFilters()
         {
-            Genre.slug = selectedItem.slug;
+            //Genre.slug = selectedItem.slug;
             FiltersDictionary["year"] = YearParam;
-            FiltersDictionary["genres"] = Genre.slug;
+            FiltersDictionary["genres"] = Genre?.slug;
+            FiltersDictionary["platforms"] = Platform?.id.ToString();
             MessagingCenter.Send(this, "search_filters", FiltersDictionary);
         }
 

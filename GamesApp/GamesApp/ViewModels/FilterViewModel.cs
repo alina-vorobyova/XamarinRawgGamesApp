@@ -15,22 +15,31 @@ namespace GamesApp.ViewModels
         private readonly IGameApiClient _gameApiClient;
 
         private ObservableCollection<GenreResult> _genres = new ObservableCollection<GenreResult>();
+        private ObservableCollection<PlatformResult> _platforms = new ObservableCollection<PlatformResult>();
         public ObservableCollection<GenreResult> Genres
         {
             get => _genres;
             set => Set(ref _genres, value);
         }
 
+        public ObservableCollection<PlatformResult> Platforms
+        {
+            get => _platforms;
+            set => Set(ref _platforms, value);
+        }
+
         public FilterViewModel()
         {
             _gameApiClient = DependencyService.Get<IGameApiClient>();
-            LoadAllGenres();
+            LoadAllGenresAndPlatforms();
         }
 
-        private async Task LoadAllGenres()
+        private async Task LoadAllGenresAndPlatforms()
         {
             var genres = await _gameApiClient.GetAllGenresAsync();
+            var platforms = await _gameApiClient.GetAllPlatforms();
             Genres = new ObservableCollection<GenreResult>(genres.results);
+            Platforms = new ObservableCollection<PlatformResult>(platforms.results);
         }
     }
 }

@@ -15,5 +15,6 @@ namespace GamesApp.Services.GameApiClient
         Task<GameApiResponse> GetGamesByNameAsync(string gameName, int page);
         Task<GenreApiResponse> GetAllGenresAsync();
 
+        Task<PlatformApiResponse> GetAllPlatforms();
     }
 }
