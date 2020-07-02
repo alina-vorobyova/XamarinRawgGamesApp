@@ -20,6 +20,8 @@ namespace GamesApp.ViewModels
 
         protected ObservableCollection<Game> _newReleasedGames = new ObservableCollection<Game>();
         protected ObservableCollection<Game> _favoriteGames = new ObservableCollection<Game>();
+        protected Dictionary<string, string> FiltersDictionary = new Dictionary<string, string>();
+
 
         protected bool _loading = false;
 
@@ -63,6 +65,20 @@ namespace GamesApp.ViewModels
             set => Set(ref _yearParam, value);
         }
 
+        private string _platform;
+        public string Platform
+        {
+            get => _platform;
+            set => Set(ref _platform, value);
+        }
+
+        private GenreResult _genre;
+        public GenreResult Genre
+        {
+            get => _genre;
+            set => Set(ref _genre, value);
+        }
+
         public Command LoadMoreGamesCommand { get; set; }
         public Command GameDetailCommand { get; set; }
         public Command LikeGameCommand { get; set; }
@@ -78,6 +94,9 @@ namespace GamesApp.ViewModels
             LikeGameCommand = new Command<Game>(LikeGame);
             DislikeGameCommand = new Command<Game>(DislikeGame);
             OpenFiltersModalPage = new Command(OpenFiltersPage);
+            AddSearchFiltersCommand = new Command<GenreResult>(AddFilters);
+
+            FiltersDictionary.Add("year", YearParam);
 
             MessagingCenter.Subscribe<GameDetailViewModel, GameDetailedResponse>(this, "game_liked", async (sender, message) =>
             {
@@ -99,6 +118,14 @@ namespace GamesApp.ViewModels
                 var likesCheckedGames = await CheckIsGameAlreadyLikedOrNot(NewReleasedGames.ToList());
                 NewReleasedGames = new ObservableCollection<Game>(likesCheckedGames);
             });
+        }
+
+        protected void AddFilters(GenreResult selectedItem)
+        {
+            Genre.slug = selectedItem.slug;
+            FiltersDictionary["year"] = YearParam;
+            FiltersDictionary["genres"] = Genre.slug;
+            MessagingCenter.Send(this, "search_filters", FiltersDictionary);
         }
 
         protected async void OpenFiltersPage()

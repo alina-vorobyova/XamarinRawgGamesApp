@@ -6,12 +6,25 @@
              mc:Ignorable="d"
              x:Class="GamesApp.Views.FiltersModalPage">
     <ContentPage.Content>
-        <StackLayout>
-            <StackLayout Orientation="Horizontal">
-                <Label Text="Year" FontSize="30"/>
-                <Entry Placeholder="StringFormat='Indicate year. Example: 2020" Text="{Binding YearParam}"/>
-            </StackLayout>
-            <Button Text="Apply" Clicked="Button_OnClicked"/>
+        <StackLayout HorizontalOptions="Center" Margin="20,0,20,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Text="Year:" FontSize="25" FontAttributes="Bold" Grid.Column="0"/>
+                <Entry Placeholder="Indicate year. Example: 2020" Text="{Binding YearParam}" Grid.Column="1"/>
+            </Grid>
+
+            <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+                <Label Text="Genre:" FontSize="25" FontAttributes="Bold" Grid.Column="0"/>
+                <Picker x:Name="GenresPicker" ItemsSource="{Binding Genres}" ItemDisplayBinding="{Binding slug}" Grid.Column="1" SelectedItem="{Binding Genre}"/>
+            </Grid>
+            <Button Text="Apply" Clicked="Button_OnClicked" Command="{Binding AddSearchFiltersCommand}" CommandParameter="{Binding SelectedItem, Source={x:Reference GenresPicker}}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

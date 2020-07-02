@@ -37,39 +37,24 @@ namespace GamesApp.Services.GameApiClient
             return games;
         }
 
-        public async Task<GameApiResponse> GetAllNewReleasedGamesForLast30DaysAsync(SearchFiltersDto searchFiltersDto, int page)
+        public async Task<GameApiResponse> GetAllNewReleasedGamesForLast30DaysAsync(Dictionary<string, string> searchFilters, int page)
         {
-            var filtersDictionary = new Dictionary<string, string>
-            {
-                { "year", searchFiltersDto.Year },
-                { "platform", searchFiltersDto.Platform },
-                { "genres", searchFiltersDto.Genre }
-            };
-
             GameApiResponse games = null;
             var currentDate = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-{DateTime.Now.Day:D2}";
-            var thirtyDaysBeforeDateTime = DateTime.Today.AddDays(-30);
-            var thirtyDaysBefore = $"{thirtyDaysBeforeDateTime.Year}-{thirtyDaysBeforeDateTime.Month:D2}-{thirtyDaysBeforeDateTime.Day:D2}";
+            var thirtyDaysBefore = -30;
+            var thirtyDaysBeforeDateTime = DateTime.Today.AddDays(thirtyDaysBefore);
+            var thirtyDaysBeforeToday = $"{thirtyDaysBeforeDateTime.Year}-{thirtyDaysBeforeDateTime.Month:D2}-{thirtyDaysBeforeDateTime.Day:D2}";
 
-            var requestUri = $"{urlApi}/games?dates={thirtyDaysBefore},{currentDate}&ordering=released&ordering=-rating&page_size=10&page={page}";
+            var requestUri = $"{urlApi}/games?dates={thirtyDaysBeforeToday},{currentDate}&ordering=released&ordering=-rating&page_size=10&page={page}";
 
-            StringBuilder requestUriWithFilters = new StringBuilder(requestUri);
-            foreach (var queryItem in filtersDictionary)
-            {
-                if (!string.IsNullOrWhiteSpace(queryItem.Value))
-                    requestUriWithFilters.Append($"&{queryItem.Key}={queryItem.Value}");
-            }
-           
-            var json = await _httpClient.GetStringAsync(requestUriWithFilters.ToString());
+            var requestUriWithFilters = AddFiltersToUri(searchFilters, requestUri);
+
+            var json = await _httpClient.GetStringAsync(requestUriWithFilters);
             if (json != null)
                 games = JsonConvert.DeserializeObject<GameApiResponse>(json);
             return games;
         }
 
-        public Task<GameApiResponse> GetGamesByFilter(string year, string platform, string genre, int page)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<GameDetailedResponse> GetGameByIdAsync(int id)
         {
@@ -94,5 +79,28 @@ namespace GamesApp.Services.GameApiClient
                 games = JsonConvert.DeserializeObject<GameApiResponse>(json);
             return games;
         }
+
+        public async Task<GenreApiResponse> GetAllGenresAsync()
+        {
+            GenreApiResponse genreApiResponse = null;
+            var requestUri = $"{urlApi}/genres";
+            var json = await _httpClient.GetStringAsync(requestUri);
+            if (json != null)
+                genreApiResponse = JsonConvert.DeserializeObject<GenreApiResponse>(json);
+            return genreApiResponse;
+        }
+
+        private string AddFiltersToUri(Dictionary<string, string> searchFilters, string requestUri)
+        {
+            var requestUriWithFilters = new StringBuilder(requestUri);
+            foreach (var queryItem in searchFilters)
+            {
+                if (!string.IsNullOrWhiteSpace(queryItem.Value))
+                    requestUriWithFilters.Append($"&{queryItem.Key}={queryItem.Value}");
+            }
+
+            return requestUriWithFilters.ToString();
+        }
+
     }
 }

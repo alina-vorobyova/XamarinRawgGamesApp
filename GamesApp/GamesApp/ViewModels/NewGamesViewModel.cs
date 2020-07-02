@@ -26,11 +26,10 @@ namespace GamesApp.ViewModels
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
             LoadNewGames();
             LoadMoreGamesCommand = new Command(LoadMoreGames);
-            //AddSearchFiltersCommand = new Command(LoadNewGames);
 
-            MessagingCenter.Subscribe<FiltersModalPage, string>(this, "search_filters", async (sender, message) =>
+            MessagingCenter.Subscribe<GamesViewModel, Dictionary<string, string>>(this, "search_filters", async (sender, message) =>
             {
-                YearParam = message;
+                FiltersDictionary = message;
                 LoadNewGames();
             });
         }
@@ -38,12 +37,7 @@ namespace GamesApp.ViewModels
         public async void LoadNewGames()
         {
             _page = 1;
-            //var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(_page);
-            var searchFiltersDto = new SearchFiltersDto
-            {
-                Year = YearParam
-            };
-            var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(searchFiltersDto, _page);
+             var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(FiltersDictionary, _page);
             await LoadGamesFromApi(games);
         }
 
