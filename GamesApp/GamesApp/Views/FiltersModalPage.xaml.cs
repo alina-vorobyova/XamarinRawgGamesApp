@@ -19,9 +19,9 @@ namespace GamesApp.Views
             BindingContext = DependencyService.Get<FilterViewModel>();
         }
 
-        private void Button_OnClicked(object sender, EventArgs e)
-        {
-            Application.Current.MainPage.Navigation.PopModalAsync();
-        }
+        //private void Button_OnClicked(object sender, EventArgs e)
+        //{
+        //    Application.Current.MainPage.Navigation.PopModalAsync();
+        //}
     }
 }

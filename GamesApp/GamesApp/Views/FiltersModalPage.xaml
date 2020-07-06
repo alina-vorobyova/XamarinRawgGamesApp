@@ -35,7 +35,13 @@
                 <Picker x:Name="PlatformsPicker" ItemsSource="{Binding Platforms}" ItemDisplayBinding="{Binding slug}" Grid.Column="1" SelectedItem="{Binding Platform}"/>
             </Grid>
 
-            <Button Text="Apply" Clicked="Button_OnClicked" Command="{Binding AddSearchFiltersCommand}"/>
+
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Apply"  Command="{Binding AddSearchFiltersCommand}"/>
+                <Button Text="Cancel"  Command="{Binding CancelSearchFiltersCommand}"/>
+            </StackLayout>
+
+            <Button Text="Clear all filters" Command="{Binding ClearSearchFiltersCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -53,12 +53,27 @@ namespace GamesApp.ViewModels
         }
 
         public Command AddSearchFiltersCommand { get; set; }
+        public Command CancelSearchFiltersCommand { get; set; }
+        public Command ClearSearchFiltersCommand { get; set; }
 
         public FilterViewModel()
         {
             _gameApiClient = DependencyService.Get<IGameApiClient>();
             LoadAllGenresAndPlatforms();
             AddSearchFiltersCommand = new Command(AddFilters);
+            CancelSearchFiltersCommand = new Command(CancelFilters);
+            ClearSearchFiltersCommand = new Command(ClearFilters);
+        }
+
+        private void ClearFilters()
+        {
+            MessagingCenter.Send(this, "clear_search_filters");
+            Application.Current.MainPage.Navigation.PopModalAsync();
+        }
+
+        private void CancelFilters()
+        {
+            Application.Current.MainPage.Navigation.PopModalAsync();
         }
 
         private void AddFilters()
@@ -67,6 +82,7 @@ namespace GamesApp.ViewModels
             FiltersDictionary["genres"] = Genre?.slug;
             FiltersDictionary["platforms"] = Platform?.id.ToString();
             MessagingCenter.Send(this, "add_search_filters", FiltersDictionary);
+            Application.Current.MainPage.Navigation.PopModalAsync();
         }
 
         private async Task LoadAllGenresAndPlatforms()

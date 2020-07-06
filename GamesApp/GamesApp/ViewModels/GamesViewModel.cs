@@ -87,6 +87,14 @@ namespace GamesApp.ViewModels
             DislikeGameCommand = new Command<Game>(DislikeGame);
             OpenFiltersModalPage = new Command(OpenFiltersPage);
 
+
+            MessagingCenter.Subscribe<FilterViewModel>(this, "clear_search_filters", (sender) =>
+            {
+                FiltersDictionary.Clear();
+                AddFilters();
+            });
+
+
             MessagingCenter.Subscribe<FilterViewModel, Dictionary<string,string>>(this, "add_search_filters", (sender, message) =>
             {
                 FiltersDictionary = message;
@@ -123,10 +131,12 @@ namespace GamesApp.ViewModels
         protected void AddFilters()
         {
             DisplaySelectedKindOfFilter = String.Empty;
-            DisplaySelectedKindOfFilter += FiltersDictionary["year"] is null ? String.Empty : "Year ";
-            DisplaySelectedKindOfFilter += FiltersDictionary["genres"] is null ? String.Empty : "Genre ";
-            DisplaySelectedKindOfFilter += FiltersDictionary["platforms"] is null ? String.Empty : "Platform ";
-
+            if (FiltersDictionary.Count > 0)
+            {
+                DisplaySelectedKindOfFilter += FiltersDictionary["year"] is null ? String.Empty : "Year ";
+                DisplaySelectedKindOfFilter += FiltersDictionary["genres"] is null ? String.Empty : "Genre ";
+                DisplaySelectedKindOfFilter += FiltersDictionary["platforms"] is null ? String.Empty : "Platform ";
+            }
             MessagingCenter.Send(this, "filters_added");
         }
 
