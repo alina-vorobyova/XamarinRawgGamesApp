@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace GamesApp.ViewModels
         protected readonly IFavoriteGameService _favoriteGameService;
 
         protected ObservableCollection<Game> _newReleasedGames = new ObservableCollection<Game>();
-        protected ObservableCollection<Game> _favoriteGames = new ObservableCollection<Game>();
+
         protected Dictionary<string, string> FiltersDictionary = new Dictionary<string, string>();
 
 
@@ -31,18 +32,28 @@ namespace GamesApp.ViewModels
             set => Set(ref _newReleasedGames, value);
         }
 
-        public ObservableCollection<Game> FavoriteGames
-        {
-            get => _favoriteGames;
-            set => Set(ref _favoriteGames, value);
-        }
-
         private string _checkConnection;
         public string CheckConnection
         {
             get => _checkConnection;
             set => Set(ref _checkConnection, value);
         }
+
+
+        private int _remainingItemsThresholdn;
+        public int RemainingItemsThreshold
+        {
+            get => _remainingItemsThresholdn;
+            set => Set(ref _remainingItemsThresholdn, value);
+        }
+
+        private string _displaySelectedKindOfFilter;
+        public string DisplaySelectedKindOfFilter
+        {
+            get => _displaySelectedKindOfFilter;
+            set => Set(ref _displaySelectedKindOfFilter, value);
+        }
+
 
         private bool _isConnected;
         public bool IsConnected
@@ -58,33 +69,14 @@ namespace GamesApp.ViewModels
             set => Set(ref _searchGame, value);
         }
 
-        private string _yearParam;
-        public string YearParam
-        {
-            get => _yearParam;
-            set => Set(ref _yearParam, value);
-        }
-
-        private PlatformResult _platform;
-        public PlatformResult Platform
-        {
-            get => _platform;
-            set => Set(ref _platform, value);
-        }
-
-        private GenreResult _genre;
-        public GenreResult Genre
-        {
-            get => _genre;
-            set => Set(ref _genre, value);
-        }
-
         public Command LoadMoreGamesCommand { get; set; }
         public Command GameDetailCommand { get; set; }
         public Command LikeGameCommand { get; set; }
         public Command DislikeGameCommand { get; set; }
-        public Command AddSearchFiltersCommand { get; set; }
         public Command OpenFiltersModalPage { get; set; }
+
+
+        public Guid Id { get; set; }
 
         public GamesViewModel()
         {
@@ -94,9 +86,17 @@ namespace GamesApp.ViewModels
             LikeGameCommand = new Command<Game>(LikeGame);
             DislikeGameCommand = new Command<Game>(DislikeGame);
             OpenFiltersModalPage = new Command(OpenFiltersPage);
-            AddSearchFiltersCommand = new Command(AddFilters);
 
-            FiltersDictionary.Add("year", YearParam);
+            MessagingCenter.Subscribe<FilterViewModel, Dictionary<string,string>>(this, "add_search_filters", (sender, message) =>
+            {
+                FiltersDictionary = message;
+                AddFilters();
+            });
+
+            MessagingCenter.Subscribe<CustomTitleView, string>(this, "search_game", (sender, message) =>
+            {
+                SearchGame = message;
+            });
 
             MessagingCenter.Subscribe<GameDetailViewModel, GameDetailedResponse>(this, "game_liked", async (sender, message) =>
             {
@@ -122,11 +122,12 @@ namespace GamesApp.ViewModels
 
         protected void AddFilters()
         {
-            //Genre.slug = selectedItem.slug;
-            FiltersDictionary["year"] = YearParam;
-            FiltersDictionary["genres"] = Genre?.slug;
-            FiltersDictionary["platforms"] = Platform?.id.ToString();
-            MessagingCenter.Send(this, "search_filters", FiltersDictionary);
+            DisplaySelectedKindOfFilter = String.Empty;
+            DisplaySelectedKindOfFilter += FiltersDictionary["year"] is null ? String.Empty : "Year ";
+            DisplaySelectedKindOfFilter += FiltersDictionary["genres"] is null ? String.Empty : "Genre ";
+            DisplaySelectedKindOfFilter += FiltersDictionary["platforms"] is null ? String.Empty : "Platform ";
+
+            MessagingCenter.Send(this, "filters_added");
         }
 
         protected async void OpenFiltersPage()
@@ -189,6 +190,9 @@ namespace GamesApp.ViewModels
         {
             if (Connectivity.NetworkAccess == NetworkAccess.Internet)
             {
+                var remainingItemsThresholdShouldInvoke = 0;
+                var remainingItemsThresholdShouldNotInvoke = -1;
+
                 CheckConnection = "";
                 IsConnected = false;
                 try
@@ -197,6 +201,10 @@ namespace GamesApp.ViewModels
                     {
                         var likesCheckedGames = await CheckIsGameAlreadyLikedOrNot(games.results);
                         NewReleasedGames = new ObservableCollection<Game>(likesCheckedGames);
+                        if (games.next != null)
+                            RemainingItemsThreshold = 0;
+                        else
+                            RemainingItemsThreshold = -1;
                     }
                     else
                         await Application.Current.MainPage.DisplayAlert("Warning!", "Service is now unavailable. Please, try again later.", "Close");
@@ -228,6 +236,10 @@ namespace GamesApp.ViewModels
                             {
                                 item.IsLiked = await CheckIsGameAlreadyLikedOrNot(item.id);
                                 NewReleasedGames.Add(item);
+                                if (games.next != null)
+                                    RemainingItemsThreshold = 0;
+                                else
+                                    RemainingItemsThreshold = -1;
                             }
                             _loading = false;
                         }

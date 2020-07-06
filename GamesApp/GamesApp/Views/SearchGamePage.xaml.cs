@@ -16,7 +16,7 @@ namespace GamesApp.Views
         public SearchGamePage()
         {
             InitializeComponent();
-            BindingContext = new SearchViewModel();
+            BindingContext = DependencyService.Get<SearchViewModel>();
         }
     }
 }

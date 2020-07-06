@@ -15,7 +15,8 @@ namespace GamesApp.Views
         public FavoriteGamesPage()
         {
             InitializeComponent();
-            BindingContext = new FavoriteGamesViewModel();
+            //BindingContext = new FavoriteGamesViewModel();
+            BindingContext = DependencyService.Get<FavoriteGamesViewModel>();
         }
     }
 }

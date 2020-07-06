@@ -16,7 +16,8 @@ namespace GamesApp.Views
         public GameDetailPage()
         {
             InitializeComponent();
-            BindingContext = new GameDetailViewModel();
+            //BindingContext = new GameDetailViewModel();
+            BindingContext = DependencyService.Get<GameDetailViewModel>();
         }
     }
 

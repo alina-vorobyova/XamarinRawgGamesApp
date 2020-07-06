@@ -27,11 +27,16 @@ namespace GamesApp.ViewModels
             LoadNewGames();
             LoadMoreGamesCommand = new Command(LoadMoreGames);
 
-            MessagingCenter.Subscribe<GamesViewModel, Dictionary<string, string>>(this, "search_filters", async (sender, message) =>
+            MessagingCenter.Subscribe<GamesViewModel>(this, "filters_added", (sender) =>
             {
-                FiltersDictionary = message;
                 LoadNewGames();
             });
+
+            //MessagingCenter.Subscribe<GamesViewModel, string>(this, "search_filters_info_for_display", async (sender, message) =>
+            //{
+            //    DisplaySelectedKindOfFilter = message;
+            //    //LoadNewGames();
+            //});
         }
 
         public async void LoadNewGames()
@@ -44,7 +49,7 @@ namespace GamesApp.ViewModels
         public async void LoadMoreGames()
         {
             _page++;
-            var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(_page);
+            var games = await _gameApiClient.GetAllNewReleasedGamesForLast30DaysAsync(FiltersDictionary, _page);
             LoadMoreGamesFromApi(games);
         }
 

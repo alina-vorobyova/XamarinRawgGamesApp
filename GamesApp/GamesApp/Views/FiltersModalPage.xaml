@@ -35,7 +35,6 @@
                 <Picker x:Name="PlatformsPicker" ItemsSource="{Binding Platforms}" ItemDisplayBinding="{Binding slug}" Grid.Column="1" SelectedItem="{Binding Platform}"/>
             </Grid>
 
-
             <Button Text="Apply" Clicked="Button_OnClicked" Command="{Binding AddSearchFiltersCommand}"/>
         </StackLayout>
     </ContentPage.Content>

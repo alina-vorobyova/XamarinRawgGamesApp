@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:GamesApp.ViewModels;assembly=GamesApp"
              mc:Ignorable="d"
              x:Class="GamesApp.Views.CustomTitleView">
+    
     <ContentView.Content>
         <StackLayout>
             <!--<SearchBar HeightRequest="60" PlaceholderColor="White" Placeholder="Search game" HorizontalOptions="Center" Margin="20,0,0,0" TextColor="White"/>-->

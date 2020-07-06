@@ -12,7 +12,7 @@ using Xamarin.Forms;
 
 namespace GamesApp.ViewModels
 {
-    public class GameDetailViewModel : ViewModelBase
+    public class GameDetailViewModel : GamesViewModel
     {
         private readonly IGameApiClient _gameApiClient;
         private ObservableCollection<Game> _favoriteGames = new ObservableCollection<Game>();

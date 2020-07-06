@@ -24,19 +24,7 @@ namespace GamesApp.Services.GameApiClient
             _httpClient = new HttpClient();
         }
 
-        public async Task<GameApiResponse> GetAllNewReleasedGamesForLast30DaysAsync(int page)
-        {
-            GameApiResponse games = null;
-            var currentDate = $"{DateTime.Now.Year}-{DateTime.Now.Month:D2}-{DateTime.Now.Day:D2}";
-            var thirtyDaysBeforeDateTime = DateTime.Today.AddDays(-30);
-            var thirtyDaysBefore = $"{thirtyDaysBeforeDateTime.Year}-{thirtyDaysBeforeDateTime.Month:D2}-{thirtyDaysBeforeDateTime.Day:D2}";
-            var requestUri = $"{urlApi}/games?dates={thirtyDaysBefore},{currentDate}&ordering=released&page_size=10&page={page}&ordering=-rating";
-            var json =  await _httpClient.GetStringAsync(requestUri);
-            if(json != null)
-                 games = JsonConvert.DeserializeObject<GameApiResponse>(json);
-            return games;
-        }
-
+     
         public async Task<GameApiResponse> GetAllNewReleasedGamesForLast30DaysAsync(Dictionary<string, string> searchFilters, int page)
         {
             GameApiResponse games = null;
@@ -70,11 +58,14 @@ namespace GamesApp.Services.GameApiClient
             return game;
         }
 
-        public async Task<GameApiResponse> GetGamesByNameAsync(string gameName, int page)
+
+        public async Task<GameApiResponse> GetGamesByNameAsync(Dictionary<string, string> searchFilters, string gameName, int page)
         {
             GameApiResponse games = null;
-            var requestUri = $"{urlApi}/games?search={gameName}&ordering=released&page_size=10&page={page}&ordering=-rating";
-            var json = await _httpClient.GetStringAsync(requestUri);
+            var requestUri = $"{urlApi}/games?search={gameName}&page_size=10&page={page}&ordering=-rating";
+            var requestUriWithFilters = AddFiltersToUri(searchFilters, requestUri);
+
+            var json = await _httpClient.GetStringAsync(requestUriWithFilters);
             if (json != null)
                 games = JsonConvert.DeserializeObject<GameApiResponse>(json);
             return games;

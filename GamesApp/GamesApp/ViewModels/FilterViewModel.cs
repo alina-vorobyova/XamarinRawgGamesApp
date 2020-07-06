@@ -10,12 +10,14 @@ using Xamarin.Forms;
 
 namespace GamesApp.ViewModels
 {
-    public class FilterViewModel : GamesViewModel
+    public class FilterViewModel : ViewModelBase
     {
         private readonly IGameApiClient _gameApiClient;
 
         private ObservableCollection<GenreResult> _genres = new ObservableCollection<GenreResult>();
         private ObservableCollection<PlatformResult> _platforms = new ObservableCollection<PlatformResult>();
+        private Dictionary<string, string> FiltersDictionary = new Dictionary<string, string>();
+
         public ObservableCollection<GenreResult> Genres
         {
             get => _genres;
@@ -28,10 +30,43 @@ namespace GamesApp.ViewModels
             set => Set(ref _platforms, value);
         }
 
+        private string _yearParam;
+        public string YearParam
+        {
+            get => _yearParam;
+            set => Set(ref _yearParam, value);
+        }
+
+        private PlatformResult _platform;
+        public PlatformResult Platform
+        {
+            get => _platform;
+            set => Set(ref _platform, value);
+        }
+
+        private GenreResult _genre;
+
+        public GenreResult Genre
+        {
+            get => _genre;
+            set => Set(ref _genre, value);
+        }
+
+        public Command AddSearchFiltersCommand { get; set; }
+
         public FilterViewModel()
         {
             _gameApiClient = DependencyService.Get<IGameApiClient>();
             LoadAllGenresAndPlatforms();
+            AddSearchFiltersCommand = new Command(AddFilters);
+        }
+
+        private void AddFilters()
+        {
+            FiltersDictionary["year"] = YearParam;
+            FiltersDictionary["genres"] = Genre?.slug;
+            FiltersDictionary["platforms"] = Platform?.id.ToString();
+            MessagingCenter.Send(this, "add_search_filters", FiltersDictionary);
         }
 
         private async Task LoadAllGenresAndPlatforms()

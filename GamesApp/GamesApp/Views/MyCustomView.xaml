@@ -22,7 +22,8 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Entry IsReadOnly="True" Text="Order by:"/>
+          
+            <Label Text="{Binding DisplaySelectedKindOfFilter, StringFormat='Order by: {0}'}" FontSize="15" FontAttributes="Bold" />
             <Button Grid.Column="1"  Text="Add filter" Command="{Binding OpenFiltersModalPage}"/>
         </Grid>
 
@@ -33,7 +34,7 @@
             VerticalOptions="FillAndExpand" 
             SelectionMode="Single" 
             ItemsSource="{Binding NewReleasedGames}" 
-            RemainingItemsThreshold="0" 
+            RemainingItemsThreshold="{Binding RemainingItemsThreshold}" 
             RemainingItemsThresholdReached="OnRemainingItemsThresholdReached">
             <!--<CollectionView.ItemsSource>
                 <x:Array Type="{x:Type x:String}">

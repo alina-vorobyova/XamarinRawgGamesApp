@@ -15,18 +15,19 @@ namespace GamesApp.Views
         public CustomTitleView()
         {
             InitializeComponent();
-            BindingContext = new GamesViewModel();
+            BindingContext = new TitleViewModel();
+            //BindingContext = DependencyService.Get<TitleViewModel>();
         }
 
         private async void Entry_OnCompleted(object sender, EventArgs e)
         {
-            if (BindingContext is GamesViewModel gameViewModel)
+            if (BindingContext is TitleViewModel titleViewModel)
             {
-                if (!string.IsNullOrWhiteSpace(gameViewModel.SearchGame))
+                if (!string.IsNullOrWhiteSpace(titleViewModel.SearchGame))
                 {
+                    MessagingCenter.Send(this, "search_game", titleViewModel.SearchGame);
                     var detailPage = (Application.Current.MainPage as MasterDetailPage)?.Detail;
                     await detailPage.Navigation?.PushAsync(new SearchGamePage());
-                    MessagingCenter.Send(this, "search_game", gameViewModel.SearchGame);
                     SearchEntry.Text = "";
                 }
             }

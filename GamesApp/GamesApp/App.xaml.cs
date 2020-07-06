@@ -20,6 +20,13 @@ namespace GamesApp
             DependencyService.Register<MockDataStore>();
             DependencyService.Register<IGameApiClient, GameApiClient>();
             DependencyService.Register<IFavoriteGameService, FavoriteGameService>();
+            DependencyService.Register<GamesViewModel>();
+            DependencyService.Register<SearchViewModel>();
+            DependencyService.Register<NewGamesViewModel>();
+            DependencyService.Register<FavoriteGamesViewModel>();
+            DependencyService.Register<FilterViewModel>();
+            DependencyService.Register<GameDetailViewModel>();
+            DependencyService.Register<TitleViewModel>();
             MainPage = new MainPage();
         }
 

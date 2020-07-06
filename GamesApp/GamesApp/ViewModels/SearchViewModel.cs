@@ -17,23 +17,24 @@ namespace GamesApp.ViewModels
         {
             _gameApiClient = DependencyService.Get<IGameApiClient>();
             Connectivity.ConnectivityChanged += Connectivity_ConnectivityChanged;
-            LoadNewGames();
             LoadMoreGamesCommand = new Command(LoadMoreGames);
             MessagingCenter.Subscribe<CustomTitleView, string>(this, "search_game", async (sender, message) =>
             {
-                SearchGame = message;
-                await LoadNewGames();
+                await LoadGames();
+            });
+
+            MessagingCenter.Subscribe<GamesViewModel>(this, "filters_added", async (sender) =>
+            {
+                await LoadGames();
             });
         }
 
-       
-
-        public async Task LoadNewGames()
+       public async Task LoadGames()
         {
             _page = 1;
             if (!string.IsNullOrWhiteSpace(SearchGame))
             {
-                var games = await _gameApiClient.GetGamesByNameAsync(SearchGame, _page);
+                var games = await _gameApiClient.GetGamesByNameAsync(FiltersDictionary, SearchGame, _page);
                 await LoadGamesFromApi(games);
             }
         }
@@ -41,7 +42,7 @@ namespace GamesApp.ViewModels
         public async void LoadMoreGames()
         {
             _page++;
-            var games = await _gameApiClient.GetGamesByNameAsync(SearchGame, _page);
+            var games = await _gameApiClient.GetGamesByNameAsync(FiltersDictionary, SearchGame, _page);
             LoadMoreGamesFromApi(games);
         }
 
@@ -55,7 +56,7 @@ namespace GamesApp.ViewModels
                 if (NewReleasedGames.Count > 0)
                     LoadMoreGames();
                 else
-                    LoadNewGames();
+                    LoadGames();
             }
         }
     }
